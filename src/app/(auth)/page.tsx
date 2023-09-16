@@ -19,6 +19,8 @@ const Dashboard = (props: Props) => {
     const {user, logout} = useAuthContext();
     const userToken = user?.token;
 
+
+
     const [clientes, setClientes] = useState<any>([]);
     const [ordens, setOrdens] = useState<any>([]);
     const [produtos, setProdutos] = useState<any>([]);
@@ -41,10 +43,15 @@ const Dashboard = (props: Props) => {
                     },
                 })
                 .then(response => {
-                    setClientes(response.data.data);
+                    const{ token, data } = response.data
+                    setClientes(data);
+                    if(!token) {
+                        console.log(token);
+                    }
                 })
                 .catch(err => {
                     if (userToken) {
+                        
                         logout(userToken);
                     }
                 })

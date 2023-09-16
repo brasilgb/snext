@@ -11,7 +11,7 @@ interface PrivateRouteProps {
 const PrivateRoute = ({children}: PrivateRouteProps) => {
     const {push} = useRouter();
     const isUserAutenticated = checkUserAuthenticated();
-
+console.log(checkUserAuthenticated());
     useEffect(() => {
         if (!isUserAutenticated) {
             push(APP_ROUTES.public.login);

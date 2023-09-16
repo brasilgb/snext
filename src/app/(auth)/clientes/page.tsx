@@ -20,9 +20,8 @@ import React, {useCallback, useEffect, useState} from 'react';
 import {HiOutlineInformationCircle} from 'react-icons/hi2';
 import {IoClose, IoSearch} from 'react-icons/io5';
 import {RiArrowLeftFill, RiArrowRightFill} from 'react-icons/ri';
-type Props = {};
 
-const Clientes = (props: Props) => {
+const Clientes = () => {
     const {user, logout} = useAuthContext();
     const [deleteModal, setDeleteModal] = useState(false);
     const [clientes, setClientes] = useState<any>([]);
@@ -42,13 +41,13 @@ const Clientes = (props: Props) => {
             await sosapi
                 .get(`clientes?page=${linkValue}`, {
                     headers: {
-                        Authorization: `Bearer ${user.token}`,
+                        Authorization: `Bearer ${user?.token}`,
                     },
                 })
                 .then(response => {
                     const { data, token } = response.data;
                     if (!token) {
-                        logout(user.token);
+                        logout(user?.token);
                         return;
                     }
                     setClientes(data);

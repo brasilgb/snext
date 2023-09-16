@@ -252,7 +252,7 @@ const Empresa = () => {
                                                         <PreviewImage />
                                                     ) : (
                                                         <Image
-                                                            src={empresas.logo ? `${process.env.NEXT_PUBLIC_SITE_URL}/storage/uploads/${empresas.logo}` : './notimage.jpg'}
+                                                            src={empresas.logo ? `${process.env.NEXT_PUBLIC_SITE_URL}/storage/uploads/${empresas.logo}` : `${process.env.NEXT_PUBLIC_SITE_URL}/storage/image/notimage.jpg`}
                                                             alt="logo"
                                                             className="h-11"
                                                             width={44}
