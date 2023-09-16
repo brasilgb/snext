@@ -69,7 +69,7 @@ const Clientes = () => {
         await sosapi
             .get(`clientes?q=${value}`, {
                 headers: {
-                    Authorization: `Bearer ${user.token}`,
+                    Authorization: `Bearer ${user?.token}`,
                 },
             })
             .then(response => {
@@ -86,14 +86,14 @@ const Clientes = () => {
             await sosapi
                 .get(`allclientes`, {
                     headers: {
-                        Authorization: `Bearer ${user.token}`,
+                        Authorization: `Bearer ${user?.token}`,
                     },
                 })
                 .then(response => {
                     setClientesAll(response.data.data);
                 })
                 .catch(err => {
-                    // logout(user.token);
+                    // logout(user?.token);
                 });
         };
         getClientesAll();
@@ -125,7 +125,7 @@ const Clientes = () => {
 
             const response = await sosapi.delete(`/clientes/${deleteId}`, {
                 headers: {
-                    Authorization: `Bearer ${user.token}`,
+                    Authorization: `Bearer ${user?.token}`,
                 },
             });
             const {message, status} = response.data;
@@ -135,7 +135,7 @@ const Clientes = () => {
                 setTimeout(async () => {
                     const res = await sosapi.get(`clientes?page=${linkValue}`, {
                         headers: {
-                            Authorization: `Bearer ${user.token}`,
+                            Authorization: `Bearer ${user?.token}`,
                         },
                     });
                     setClientes(res.data.data);
