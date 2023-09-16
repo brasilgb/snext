@@ -4,7 +4,7 @@ import { usePathname } from 'next/navigation'
 import { Inter } from 'next/font/google'
 import { checkIsPublicRoute } from "@/functions/check-is-public-route"
 import PrivateRoute from "@/components/PrivateRoute"
-import { AuthProvider } from "@/contexts/auth"
+import { AuthProvider, useAuthContext } from "@/contexts/auth"
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -13,8 +13,9 @@ export default function RootLayout({
 }: {
   children: React.ReactNode
 }) {
-
+const {authenticated, user} = useAuthContext();
   const pathname = usePathname();
+  console.log(pathname, user);
   const isPublicPage = checkIsPublicRoute(pathname!)
   return (
     <html lang="en">
