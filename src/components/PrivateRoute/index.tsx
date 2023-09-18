@@ -1,15 +1,15 @@
-import React, { ReactNode, useEffect } from 'react';
+import React, {ReactNode, useEffect} from 'react';
 
-import { useRouter } from 'next/navigation';
-import { APP_ROUTES } from "@/constants/app-routes";
-import { checkUserAuthenticated } from "@/functions/check-user-autenticated";
+import {useRouter} from 'next/navigation';
+import {APP_ROUTES} from '@/constants/app-routes';
+import {checkUserAuthenticated} from '@/functions/check-user-autenticated';
 
 interface PrivateRouteProps {
     children: ReactNode;
 }
 
-const PrivateRoute = ({ children }: PrivateRouteProps) => {
-    const { push } = useRouter();
+const PrivateRoute = ({children}: PrivateRouteProps) => {
+    const {push} = useRouter();
     const isUserAutenticated = checkUserAuthenticated();
 
     useEffect(() => {

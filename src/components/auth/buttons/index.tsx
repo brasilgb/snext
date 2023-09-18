@@ -13,7 +13,7 @@ import {TbEdit} from 'react-icons/tb';
 import {HiOutlineInformationCircle, HiTrash} from 'react-icons/hi2';
 import sosapi from '@/services/sosapi';
 import AMessage from '../message';
-import { useRouter } from 'next/navigation';
+import {useRouter} from 'next/navigation';
 
 interface ButtonsProps {
     label?: string;
@@ -23,7 +23,6 @@ interface ButtonsProps {
 }
 
 export const AButtomAdd = ({label, url}: ButtonsProps) => {
-
     return (
         <Link
             className="flex items-center justify-center transition-all duration-300 bg-primary-blue hover:bg-secundary-blue px-4 py-2 drop-shadow-md rounded-lg border-2 border-white"
@@ -56,7 +55,7 @@ export const AButtomEdit = ({label, url, param}: ButtonsProps) => {
             // as={`${url}/${param}`}
             passHref
             // type='button'
-            // onClick={() => 
+            // onClick={() =>
             //     router.push(`${url}?id=${param}`)
             // }
         >

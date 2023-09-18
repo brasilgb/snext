@@ -18,20 +18,18 @@ const Login = () => {
     const {loginMessage, login, loading} = useAuthContext();
     const [timeNow, setTimeNow] = useState<any>('');
     const [logotipo, setLogotipo] = useState<any>([]);
-    const [clientes, setClientes] = useState<any>([]);
-    const [loading1, setLoading1] = useState(false);
     const {user, logout} = useAuthContext();
-    const userToken = user?.token;
+    const token = user?.token;
     useEffect(() => {
         const getLogotipo = async () => {
             await sosapi
                 .get('logotipo')
                 .then(response => {
-                    const { data } = response.data;
+                    const {data} = response.data;
                     setLogotipo(data);
                 })
                 .catch(err => {
-                    console.log(err);
+                    console.log(err.response.status);
                 });
         };
         getLogotipo();
@@ -60,9 +58,11 @@ const Login = () => {
             </div>
             <div className="w-full flex items-center justify-center py-6">
                 <Image
-                    src={logotipo?.logo
-                        ?`${process.env.NEXT_PUBLIC_SITE_URL}/storage/uploads/${logotipo?.logo}`
-                        :`${process.env.NEXT_PUBLIC_SITE_URL}/storage/image/notimage.jpg`}
+                    src={
+                        logotipo?.logo
+                            ? `${process.env.NEXT_PUBLIC_SITE_URL}/storage/uploads/${logotipo?.logo}`
+                            : `${process.env.NEXT_PUBLIC_SITE_URL}/storage/image/notimage.jpg`
+                    }
                     alt="Logo"
                     className="w-16 h-16"
                     width={64}

@@ -1,18 +1,18 @@
 'use client';
-import React, { useState, useCallback, useEffect, useRef } from 'react';
+import React, {useState, useCallback, useEffect, useRef} from 'react';
 import {
     ABoxAll,
     ABoxContent,
     ABoxFooter,
     ABoxHeader,
 } from '@/components/auth/box';
-import { Field, Form, Formik } from 'formik';
-import { IoSave } from 'react-icons/io5';
+import {Field, Form, Formik} from 'formik';
+import {IoSave} from 'react-icons/io5';
 import sosapi from '@/services/sosapi';
 import AMessage from '@/components/auth/message';
-import { CgSpinnerTwo } from 'react-icons/cg';
+import {CgSpinnerTwo} from 'react-icons/cg';
 import schema from './schema';
-import { useAuthContext } from '@/contexts/auth';
+import {useAuthContext} from '@/contexts/auth';
 
 interface FormProps {
     id: string;
@@ -26,7 +26,7 @@ interface FormProps {
 }
 
 const Email = () => {
-    const { user, logout } = useAuthContext();
+    const {user, logout} = useAuthContext();
     const [message, setMessage] = useState<string>('');
     const [showMessage, setShowMessage] = useState<boolean>(false);
     const [loading, setLoading] = useState<boolean>(false);
@@ -41,15 +41,14 @@ const Email = () => {
                     },
                 })
                 .then(response => {
-                    const { data, token } = response.data;
-                    if (!token) {
-                        logout(user.token);
-                        return;
-                    }
+                    const {data, token} = response.data;
                     setEmails(data[0]);
                 })
                 .catch(err => {
-                    console.log(err);
+                    const {status} = err.response;
+                    if (status === 401) {
+                        logout(user?.token);
+                    }
                 });
         };
         getEmails();
@@ -76,11 +75,8 @@ const Email = () => {
                     },
                 },
             );
-            const { message, status, token } = response.data;
-            if (!token) {
-                logout(user.token);
-                return;
-            }
+            const {message, status, token} = response.data;
+
             if (status === 200) {
                 setTimeout(() => {
                     setLoading(false);
@@ -343,10 +339,11 @@ const Email = () => {
                             <ABoxFooter>
                                 <div className="flex justify-end">
                                     <button
-                                        className={`shadow rounded-md px-4 py-2 border-2 border-white flex items-center justify-center transition-all duration-500 ${!isValid
+                                        className={`shadow rounded-md px-4 py-2 border-2 border-white flex items-center justify-center transition-all duration-500 ${
+                                            !isValid
                                                 ? ''
                                                 : 'bg-primary-blue hover:bg-secundary-blue'
-                                            }`}
+                                        }`}
                                         type="submit"
                                         disabled={!isValid}
                                     >
@@ -356,10 +353,11 @@ const Email = () => {
                                             <IoSave className="text-white text-lg mr-2" />
                                         )}
                                         <span
-                                            className={`text-base ${!isValid
+                                            className={`text-base ${
+                                                !isValid
                                                     ? 'text-gray-300'
                                                     : 'text-white drop-shadow-md'
-                                                }`}
+                                            }`}
                                         >
                                             Salvar
                                         </span>

@@ -50,7 +50,10 @@ const Produtos = (props: Props) => {
                     setMetaData(mdata);
                 })
                 .catch(err => {
-                    // logout(user.token);
+                    const {status} = err.response;
+                    if (status === 401) {
+                        logout(user?.token);
+                    }
                 });
         };
         getProdutos();
@@ -88,7 +91,10 @@ const Produtos = (props: Props) => {
                     setProdutosAll(response.data.data);
                 })
                 .catch(err => {
-                    // logout(user.token);
+                    const {status} = err.response;
+                    if (status === 401) {
+                        logout(user?.token);
+                    }
                 });
         };
         getProdutosAll();

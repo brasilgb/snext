@@ -1,25 +1,25 @@
 'use client';
-import React, { useEffect, useState, useCallback } from 'react';
+import React, {useEffect, useState, useCallback} from 'react';
 import {
     ABoxAll,
     ABoxContent,
     ABoxFooter,
     ABoxHeader,
 } from '@/components/auth/box';
-import { AButtomBack } from '@/components/auth/buttons';
+import {AButtomBack} from '@/components/auth/buttons';
 import Select from 'react-select';
-import { Field, Form, Formik, useFormikContext } from 'formik';
-import { IoSave } from 'react-icons/io5';
-import { CgSpinnerTwo } from 'react-icons/cg';
+import {Field, Form, Formik, useFormikContext} from 'formik';
+import {IoSave} from 'react-icons/io5';
+import {CgSpinnerTwo} from 'react-icons/cg';
 import schema from '../schema';
-import { cnpj, cpf } from 'cpf-cnpj-validator';
-import { maskCelular, maskCep, maskDate, maskPhone, unMask } from '@/utils';
+import {cnpj, cpf} from 'cpf-cnpj-validator';
+import {maskCelular, maskCep, maskDate, maskPhone, unMask} from '@/utils';
 import sosapi from '@/services/sosapi';
 import moment from 'moment';
 import AMessage from '@/components/auth/message';
 import axios from 'axios';
-import { useAuthContext } from '@/contexts/auth';
-import { useSearchParams } from 'next/navigation';
+import {useAuthContext} from '@/contexts/auth';
+import {useSearchParams} from 'next/navigation';
 
 interface FormProps {
     cpf: string;
@@ -39,7 +39,7 @@ interface FormProps {
 }
 
 const CliEditar = () => {
-    const { user, logout } = useAuthContext();
+    const {user, logout} = useAuthContext();
     const [message, setMessage] = useState<string>('');
     const [showMessage, setShowMessage] = useState<boolean>(false);
     const [clientes, setClientes] = useState<any>([]);
@@ -48,7 +48,7 @@ const CliEditar = () => {
     const params = searchParams.get('q');
 
     const onBlurCep = async (e: any, setFieldValue: any) => {
-        const { value } = e.target;
+        const {value} = e.target;
         let cep = unMask(value);
 
         if (cep?.length !== 8) {
@@ -101,22 +101,21 @@ const CliEditar = () => {
                     },
                 })
                 .then(response => {
-                    const { data, token } = response.data;
-                    if (!token) {
-                        logout(user.token);
-                        return;
-                    }
-                    setClientes(data.data);
+                    const { data } = response.data;
+                    setClientes(data);
                 })
                 .catch(err => {
-                    console.log(err);
+                    const {status} = err.response;
+                    if (status === 401) {
+                        logout(user?.token);
+                    }
                 });
         };
         getClientes();
     }, [params, user, logout]);
 
     const handleSubmitForm = useCallback(
-        async (values: FormProps, { resetForm }: any) => {
+        async (values: FormProps, {resetForm}: any) => {
             setLoading(true);
             let dtformat: any = maskDate(values.nascimento);
             let formatedDate =
@@ -147,11 +146,8 @@ const CliEditar = () => {
                     },
                 },
             );
-            const { message, status, token } = response.data;
-            if (!token) {
-                logout(user.token);
-                return;
-            }
+            const {message, status, token} = response.data;
+
             if (status === 200) {
                 setTimeout(() => {
                     setLoading(false);
@@ -585,10 +581,11 @@ const CliEditar = () => {
                             <ABoxFooter>
                                 <div className="flex justify-end">
                                     <button
-                                        className={`shadow rounded-md px-4 py-2 border-2 border-white flex items-center justify-center transition-all duration-500 ${!isValid
+                                        className={`shadow rounded-md px-4 py-2 border-2 border-white flex items-center justify-center transition-all duration-500 ${
+                                            !isValid
                                                 ? ''
                                                 : 'bg-primary-blue hover:bg-secundary-blue'
-                                            }`}
+                                        }`}
                                         type="submit"
                                         disabled={!isValid}
                                     >
@@ -598,10 +595,11 @@ const CliEditar = () => {
                                             <IoSave className="text-white text-lg mr-2" />
                                         )}
                                         <span
-                                            className={`text-base ${!isValid
+                                            className={`text-base ${
+                                                !isValid
                                                     ? 'text-gray-300'
                                                     : 'text-white drop-shadow-md'
-                                                }`}
+                                            }`}
                                         >
                                             Salvar
                                         </span>

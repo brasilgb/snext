@@ -41,21 +41,19 @@ const Mensagens = (props: Props) => {
             await sosapi
                 .get(`mensagens?page=${linkValue}`, {
                     headers: {
-                        Authorization: `Bearer ${user.token}`,
+                        Authorization: `Bearer ${user?.token}`,
                     },
                 })
                 .then(response => {
-                    const { data, token } = response.data;
-                    if (!token) {
-                        logout(user.token);
-                        return;
-                    }
+                    const {data, meta} = response.data;
                     setMensagens(data);
-                    let mdata = data.meta;
-                    setMetaData(mdata);
+                    setMetaData(meta);
                 })
                 .catch(err => {
-                    console.log(err);
+                    const {status} = err.response;
+                    if (status === 401) {
+                        logout(user?.token);
+                    }
                 });
         };
         getMensagens();
@@ -69,18 +67,13 @@ const Mensagens = (props: Props) => {
         await sosapi
             .get(`mensagens?q=${value}`, {
                 headers: {
-                    Authorization: `Bearer ${user.token}`,
+                    Authorization: `Bearer ${user?.token}`,
                 },
             })
             .then(response => {
-                const { data, token } = response.data;
-                    if (!token) {
-                        logout(user.token);
-                        return;
-                    }
+                const {data, meta} = response.data;
                 setMensagens(data);
-                let mdata = data.meta;
-                setMetaData(mdata);
+                setMetaData(meta);
             });
         setSearchInput('');
         setShow(false);
@@ -106,7 +99,7 @@ const Mensagens = (props: Props) => {
 
             const response = await sosapi.delete(`/mensagens/${deleteId}`, {
                 headers: {
-                    Authorization: `Bearer ${user.token}`,
+                    Authorization: `Bearer ${user?.token}`,
                 },
             });
             const {message, status} = response.data;
@@ -118,11 +111,12 @@ const Mensagens = (props: Props) => {
                         `mensagens?page=${linkValue}`,
                         {
                             headers: {
-                                Authorization: `Bearer ${user.token}`,
+                                Authorization: `Bearer ${user?.token}`,
                             },
                         },
                     );
-                    setMensagens(res.data.data);
+                    const {data} = res.data;
+                    setMensagens(data);
                 }, 2000);
             }
             setMessage(message);

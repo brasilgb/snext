@@ -45,15 +45,14 @@ const Imagens = () => {
                     },
                 })
                 .then(response => {
-                    const { data, token } = response.data;
-                    if (!token) {
-                        logout(user.token);
-                        return;
-                    }
+                    const { data } = response.data;
                     setImagens(data);
                 })
                 .catch(err => {
-                    console.log(err);
+                    const { status } = err.response;
+                    if (status === 401) {
+                        logout(user?.token);
+                    }
                 });
         };
         getImagens();
@@ -71,25 +70,19 @@ const Imagens = () => {
                 .post(`imagens`, FilesData, {
                     headers: {
                         Authorization: `Bearer ${user.token}`,
-                        "Content-Type": "multipart/form-data",
+                        'Content-Type': 'multipart/form-data',
                     },
                 })
                 .then(async response => {
                     setImgsSrc([]);
-                    const resp = await sosapi.get(
-                        `/imagens?ordem=${params}`,
-                        {
-                            headers: {
-                                Authorization: `Bearer ${user.token}`,
-                            },
+                    const resp = await sosapi.get(`/imagens?ordem=${params}`, {
+                        headers: {
+                            Authorization: `Bearer ${user.token}`,
                         },
-                    );
+                    });
                     setImagens(resp.data.data);
-                    const { message, token } = response.data;
-                    if (!token) {
-                        logout(user.token);
-                        return;
-                    }
+                    const { message } = response.data;
+
                     setLoading(false);
                     setMessage(message);
                     setShowMessage(true);
@@ -140,24 +133,26 @@ const Imagens = () => {
     const onDelete = useCallback(
         async (e: any, id: number) => {
             e.preventDefault();
-            await sosapi.delete(`/imagens/${id}`, {
-                headers: {
-                    Authorization: `Bearer ${user.token}`,
-                },
-            }).then(async response => {
-                const resp = await sosapi.get(`/imagens?ordem=${params}`, {
+            await sosapi
+                .delete(`/imagens/${id}`, {
                     headers: {
                         Authorization: `Bearer ${user.token}`,
                     },
+                })
+                .then(async response => {
+                    const resp = await sosapi.get(`/imagens?ordem=${params}`, {
+                        headers: {
+                            Authorization: `Bearer ${user.token}`,
+                        },
+                    });
+
+                    setImagens(resp.data.data);
+                    setMessage(response.data.message);
+                    setShowMessage(true);
+                    setTimeout(() => {
+                        setShowMessage(false);
+                    }, 5000);
                 });
-                
-                setImagens(resp.data.data);
-                setMessage(response.data.message);
-                setShowMessage(true);
-                setTimeout(() => {
-                    setShowMessage(false);
-                }, 5000);
-            });
         },
         [params, user],
     );

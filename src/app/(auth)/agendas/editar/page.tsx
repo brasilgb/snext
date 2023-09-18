@@ -1,21 +1,21 @@
 'use client';
-import React, { useState, useCallback, useEffect } from 'react';
+import React, {useState, useCallback, useEffect} from 'react';
 import {
     ABoxAll,
     ABoxContent,
     ABoxFooter,
     ABoxHeader,
 } from '@/components/auth/box';
-import { AButtomBack } from '@/components/auth/buttons';
-import { Field, Form, Formik } from 'formik';
-import { IoSave } from 'react-icons/io5';
-import { editar } from '../schema';
+import {AButtomBack} from '@/components/auth/buttons';
+import {Field, Form, Formik} from 'formik';
+import {IoSave} from 'react-icons/io5';
+import {editar} from '../schema';
 import sosapi from '@/services/sosapi';
 import AMessage from '@/components/auth/message';
-import { CgSpinnerTwo } from 'react-icons/cg';
+import {CgSpinnerTwo} from 'react-icons/cg';
 import moment from 'moment';
-import { useAuthContext } from '@/contexts/auth';
-import { useSearchParams } from 'next/navigation'
+import {useAuthContext} from '@/contexts/auth';
+import {useSearchParams} from 'next/navigation';
 interface FormProps {
     cliente_id: string;
     cliente: string;
@@ -31,7 +31,7 @@ interface FormProps {
 const AgendaEditar = () => {
     const searchParams = useSearchParams();
     const params = searchParams.get('q');
-    const { user, logout } = useAuthContext();
+    const {user, logout} = useAuthContext();
     const [message, setMessage] = useState<string>('');
     const [showMessage, setShowMessage] = useState<boolean>(false);
     const [loading, setLoading] = useState<boolean>(false);
@@ -48,23 +48,23 @@ const AgendaEditar = () => {
                     },
                 })
                 .then(response => {
-                    const { data, token } = response.data;
-                    if (!token) {
-                        logout(user.token);
-                        return;
-                    }
+                    const {data, token} = response.data;
+
                     setAgendas(data);
                     setNomeCliente(data.cliente.nome);
                 })
                 .catch(err => {
-                    // logout(user.token);
+                    const {status} = err.response;
+                    if (status === 401) {
+                        logout(user?.token);
+                    }
                 });
         };
         getAgendas();
     }, [params, user, logout]);
 
     const handleSubmitForm = useCallback(
-        async (values: FormProps, { resetForm }: any) => {
+        async (values: FormProps, {resetForm}: any) => {
             setLoading(true);
             const response = await sosapi.patch(
                 `agendas/${params}`,
@@ -83,7 +83,7 @@ const AgendaEditar = () => {
                     },
                 },
             );
-            const { message, status } = response.data;
+            const {message, status} = response.data;
 
             if (status === 200) {
                 setTimeout(() => {
@@ -110,19 +110,23 @@ const AgendaEditar = () => {
                     },
                 })
                 .then(response => {
-                    setClientesAll(response.data.data);
+                    const {data} = response.data;
+                    setClientesAll(data);
                 })
                 .catch(err => {
-                    // logout(user.token);
+                    const {status} = err.response;
+                    if (status === 401) {
+                        logout(user?.token);
+                    }
                 });
         };
         getClientesAll();
     }, [user, logout]);
 
     const statusVisita = [
-        { value: 1, label: 'Aberta' },
-        { value: 2, label: 'Em atendimento' },
-        { value: 3, label: 'Fechada' },
+        {value: 1, label: 'Aberta'},
+        {value: 2, label: 'Em atendimento'},
+        {value: 3, label: 'Fechada'},
     ];
 
     const tecnicos = [
@@ -141,7 +145,6 @@ const AgendaEditar = () => {
     ];
 
     return (
-
         <ABoxAll>
             <ABoxHeader>
                 <div>
@@ -392,7 +395,7 @@ const AgendaEditar = () => {
                                                     title="Digite a status"
                                                 >
                                                     <option value="">
-                                                        Selecione a tecnico
+                                                        Selecione a status
                                                     </option>
                                                     {statusVisita.map(
                                                         (
@@ -451,10 +454,11 @@ const AgendaEditar = () => {
                             <ABoxFooter>
                                 <div className="flex justify-end">
                                     <button
-                                        className={`shadow rounded-md px-4 py-2 border-2 border-white flex items-center justify-center transition-all duration-500 ${!isValid
+                                        className={`shadow rounded-md px-4 py-2 border-2 border-white flex items-center justify-center transition-all duration-500 ${
+                                            !isValid
                                                 ? ''
                                                 : 'bg-primary-blue hover:bg-secundary-blue'
-                                            }`}
+                                        }`}
                                         type="submit"
                                         disabled={!isValid}
                                     >
@@ -464,10 +468,11 @@ const AgendaEditar = () => {
                                             <IoSave className="text-white text-lg mr-2" />
                                         )}
                                         <span
-                                            className={`text-base ${!isValid
+                                            className={`text-base ${
+                                                !isValid
                                                     ? 'text-gray-300'
                                                     : 'text-white drop-shadow-md'
-                                                }`}
+                                            }`}
                                         >
                                             Salvar
                                         </span>

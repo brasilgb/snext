@@ -10,7 +10,7 @@ type Props = {};
 const Header = (props: Props) => {
     const [navDropdown, setNavDropdown] = useState(false);
     const {user, logout} = useAuthContext();
-    
+
     const handleLogout = () => {
         setNavDropdown(false);
         logout(user.token);

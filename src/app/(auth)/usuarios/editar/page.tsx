@@ -14,7 +14,7 @@ import AMessage from '@/components/auth/message';
 import {CgSpinnerTwo} from 'react-icons/cg';
 import {editar} from '../schema';
 import {useAuthContext} from '@/contexts/auth';
-import { useSearchParams } from 'next/navigation';
+import {useSearchParams} from 'next/navigation';
 
 interface FormProps {
     name: string;
@@ -33,6 +33,7 @@ const UsuarioEditar = () => {
     const [usuarios, setUsuarios] = useState<any>([]);
     const searchParams = useSearchParams();
     const params = searchParams.get('q');
+
     useEffect(() => {
         const getUsuarios = async () => {
             await sosapi
@@ -45,7 +46,10 @@ const UsuarioEditar = () => {
                     setUsuarios(response.data.data);
                 })
                 .catch(err => {
-                    // logout(user.token);
+                    const {status} = err.response;
+                    if (status === 401) {
+                        logout(user?.token);
+                    }
                 });
         };
         getUsuarios();

@@ -100,15 +100,14 @@ const Recibo = () => {
                     },
                 })
                 .then(response => {
-                    const { data, token } = response.data;
-                    if (!token) {
-                        logout(user.token);
-                        return;
-                    }
+                    const {data} = response.data;
                     setEmpresas(data[0]);
                 })
                 .catch(err => {
-                    console.log(err);
+                    const {status} = err.response;
+                    if (status === 401) {
+                        logout(user?.token);
+                    }
                 });
         };
         getEmpresas();
@@ -123,15 +122,14 @@ const Recibo = () => {
                     },
                 })
                 .then(response => {
-                    const { data, token } = response.data;
-                    if (!token) {
-                        logout(user.token);
-                        return;
-                    }
+                    const {data} = response.data;
                     setOrdens(data.pop());
                 })
                 .catch(err => {
-                    console.log(err);
+                    const {status} = err.response;
+                    if (status === 401) {
+                        logout(user?.token);
+                    }
                 });
         };
         getOrdens();
@@ -150,7 +148,7 @@ const Recibo = () => {
         let x = 0;
         for (let i = ordens?.id + 1; i < fromOrder + 1; i++) {
             let tags = {
-                empresa: empresas.empresa,
+                empresa: empresas.razao,
                 razao: empresas.razao,
                 telefone: empresas.telefone,
                 paginas: value,

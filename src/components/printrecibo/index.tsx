@@ -29,7 +29,8 @@ const PrintRecibo = ({value}: any) => {
                     },
                 })
                 .then(response => {
-                    setEmpresas(response.data.data[0]);
+                    const {data} = response.data;
+                    setEmpresas(data[0]);
                 })
                 .catch(err => {
                     // console.log(err);
@@ -47,7 +48,8 @@ const PrintRecibo = ({value}: any) => {
                     },
                 })
                 .then(response => {
-                    setOrdens(response.data.data);
+                    const {data} = response.data;
+                    setOrdens(data);
                 })
                 .catch(err => {
                     // console.log(err);
@@ -65,7 +67,8 @@ const PrintRecibo = ({value}: any) => {
                     },
                 })
                 .then(response => {
-                    setImpressoes(response.data.data[0]);
+                    const {data} = response.data;
+                    setImpressoes(data[0]);
                 })
                 .catch(err => {
                     // console.log(err);
@@ -80,16 +83,20 @@ const PrintRecibo = ({value}: any) => {
                 <div className="flex-none flex items-center justify-start">
                     <div className="w-16">
                         <Image
-                            src={empresas.logo?`${process.env.NEXT_PUBLIC_SITE_URL}/storage/uploads/${empresas.logo}`: './notimage.jpg'}
+                            src={
+                                empresas.logo
+                                    ? `${process.env.NEXT_PUBLIC_SITE_URL}/storage/uploads/${empresas.logo}`
+                                    : `${process.env.NEXT_PUBLIC_SITE_URL}/storage/image/notimage.jpg`
+                            }
                             alt="logo"
-                            className='w-16 h-16'
+                            className="w-16 h-16"
                             width={64}
                             height={64}
                         />
                     </div>
                     <div className="pl-4">
                         <h1 className="text-xs font-medium">
-                            {empresas.empresa}
+                            {empresas.razao}
                         </h1>
                     </div>
                 </div>

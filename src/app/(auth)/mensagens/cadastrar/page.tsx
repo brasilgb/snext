@@ -1,19 +1,19 @@
 'use client';
-import React, { useState, useCallback, useEffect } from 'react';
+import React, {useState, useCallback, useEffect} from 'react';
 import {
     ABoxAll,
     ABoxContent,
     ABoxFooter,
     ABoxHeader,
 } from '@/components/auth/box';
-import { AButtomBack } from '@/components/auth/buttons';
-import { Field, Form, Formik } from 'formik';
-import { IoSave } from 'react-icons/io5';
+import {AButtomBack} from '@/components/auth/buttons';
+import {Field, Form, Formik} from 'formik';
+import {IoSave} from 'react-icons/io5';
 import schema from '../schema';
 import sosapi from '@/services/sosapi';
 import AMessage from '@/components/auth/message';
-import { CgSpinnerTwo } from 'react-icons/cg';
-import { useAuthContext } from '@/contexts/auth';
+import {CgSpinnerTwo} from 'react-icons/cg';
+import {useAuthContext} from '@/contexts/auth';
 interface FormProps {
     remetente: string;
     destinatario: string;
@@ -21,13 +21,13 @@ interface FormProps {
 }
 
 const MensagemCadastrar = () => {
-    const { user, logout } = useAuthContext();
+    const {user, logout} = useAuthContext();
     const [message, setMessage] = useState<string>('');
     const [showMessage, setShowMessage] = useState<boolean>(false);
     const [loading, setLoading] = useState<boolean>(false);
 
     const handleSubmitForm = useCallback(
-        async (values: FormProps, { resetForm }: any) => {
+        async (values: FormProps, {resetForm}: any) => {
             setLoading(true);
             const response = await sosapi.post(
                 `mensagens`,
@@ -42,11 +42,8 @@ const MensagemCadastrar = () => {
                     },
                 },
             );
-            const { message, status, token } = response.data;
-            if (!token) {
-                logout(user.token);
-                return;
-            }
+            const {message, status, token} = response.data;
+
             if (status === 200) {
                 setTimeout(() => {
                     setLoading(false);
@@ -192,10 +189,11 @@ const MensagemCadastrar = () => {
                             <ABoxFooter>
                                 <div className="flex justify-end">
                                     <button
-                                        className={`shadow rounded-md px-4 py-2 border-2 border-white flex items-center justify-center transition-all duration-500 ${!isValid
+                                        className={`shadow rounded-md px-4 py-2 border-2 border-white flex items-center justify-center transition-all duration-500 ${
+                                            !isValid
                                                 ? ''
                                                 : 'bg-primary-blue hover:bg-secundary-blue'
-                                            }`}
+                                        }`}
                                         type="submit"
                                         disabled={!isValid}
                                     >
@@ -205,10 +203,11 @@ const MensagemCadastrar = () => {
                                             <IoSave className="text-white text-lg mr-2" />
                                         )}
                                         <span
-                                            className={`text-base ${!isValid
+                                            className={`text-base ${
+                                                !isValid
                                                     ? 'text-gray-300'
                                                     : 'text-white drop-shadow-md'
-                                                }`}
+                                            }`}
                                         >
                                             Salvar
                                         </span>

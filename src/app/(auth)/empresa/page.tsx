@@ -1,21 +1,21 @@
 'use client';
-import React, { useState, useCallback, useEffect, useRef } from 'react';
+import React, {useState, useCallback, useEffect, useRef} from 'react';
 import {
     ABoxAll,
     ABoxContent,
     ABoxFooter,
     ABoxHeader,
 } from '@/components/auth/box';
-import { Field, Form, Formik } from 'formik';
-import { IoSave } from 'react-icons/io5';
-import { cnpj } from 'cpf-cnpj-validator';
+import {Field, Form, Formik} from 'formik';
+import {IoSave} from 'react-icons/io5';
+import {cnpj} from 'cpf-cnpj-validator';
 import schema from './schema';
 import sosapi from '@/services/sosapi';
 import AMessage from '@/components/auth/message';
-import { CgSpinnerTwo } from 'react-icons/cg';
-import { maskCep, maskPhone, unMask } from '@/utils';
+import {CgSpinnerTwo} from 'react-icons/cg';
+import {maskCep, maskPhone, unMask} from '@/utils';
 import axios from 'axios';
-import { useAuthContext } from '@/contexts/auth';
+import {useAuthContext} from '@/contexts/auth';
 import Image from 'next/image';
 
 interface FormProps {
@@ -34,16 +34,15 @@ interface FormProps {
 }
 
 const Empresa = () => {
-    const { user, logout } = useAuthContext();
+    const {user, logout} = useAuthContext();
     const [message, setMessage] = useState<string>('');
     const [showMessage, setShowMessage] = useState<boolean>(false);
     const [loading, setLoading] = useState<boolean>(false);
     const [empresas, setEmpresas] = useState<any>([]);
     const [previewImage, setPreviewImage] = useState<any>(null);
-    const fileRef = useRef<any>(null);
 
     const onBlurCep = async (e: any, setFieldValue: any) => {
-        const { value } = e.target;
+        const {value} = e.target;
         let cep = unMask(value);
 
         if (cep?.length !== 8) {
@@ -72,24 +71,26 @@ const Empresa = () => {
     useEffect(() => {
         const getEmpresas = async () => {
             await sosapi
-                .get('/empresa')
+                .get('/empresa', {
+                    headers: {
+                        Authorization: `Bearer ${user.token}`,
+                    },
+                })
                 .then(response => {
-                    const { data, token } = response.data;
-                    if (!token) {
-                        logout(user.token);
-                        return;
-                    }
+                    const {data} = response.data;
                     setEmpresas(data[0]);
                 })
                 .catch(err => {
-                    console.log(err);
+                    const {status} = err.response;
+                    if (status === 401) {
+                        logout(user?.token);
+                    }
                 });
         };
         getEmpresas();
     }, [user, logout]);
 
     const onChange = (e: any, setFieldValue: any) => {
-
         setFieldValue('logo', e.target.files[0]);
 
         for (const file of e.target.files) {
@@ -138,15 +139,12 @@ const Empresa = () => {
                 {
                     headers: {
                         Authorization: `Bearer ${user.token}`,
-                        "Content-Type": "multipart/form-data",
+                        'Content-Type': 'multipart/form-data',
                     },
                 },
             );
-            const { message, status, token } = response.data;
-            if (!token) {
-                logout(user.token);
-                return;
-            }
+            const {message, status } = response.data;
+
             if (status === 200) {
                 setTimeout(() => {
                     setLoading(false);
@@ -252,7 +250,11 @@ const Empresa = () => {
                                                         <PreviewImage />
                                                     ) : (
                                                         <Image
-                                                            src={empresas.logo ? `${process.env.NEXT_PUBLIC_SITE_URL}/storage/uploads/${empresas.logo}` : `${process.env.NEXT_PUBLIC_SITE_URL}/storage/image/notimage.jpg`}
+                                                            src={
+                                                                empresas.logo
+                                                                    ? `${process.env.NEXT_PUBLIC_SITE_URL}/storage/uploads/${empresas.logo}`
+                                                                    : `${process.env.NEXT_PUBLIC_SITE_URL}/storage/image/notimage.jpg`
+                                                            }
                                                             alt="logo"
                                                             className="h-11"
                                                             width={44}
@@ -548,10 +550,11 @@ const Empresa = () => {
                             <ABoxFooter>
                                 <div className="flex justify-end">
                                     <button
-                                        className={`shadow rounded-md px-4 py-2 border-2 border-white flex items-center justify-center transition-all duration-500 ${!isValid
+                                        className={`shadow rounded-md px-4 py-2 border-2 border-white flex items-center justify-center transition-all duration-500 ${
+                                            !isValid
                                                 ? ''
                                                 : 'bg-primary-blue hover:bg-secundary-blue'
-                                            }`}
+                                        }`}
                                         type="submit"
                                         disabled={!isValid}
                                     >
@@ -561,10 +564,11 @@ const Empresa = () => {
                                             <IoSave className="text-white text-lg mr-2" />
                                         )}
                                         <span
-                                            className={`text-base ${!isValid
+                                            className={`text-base ${
+                                                !isValid
                                                     ? 'text-gray-300'
                                                     : 'text-white drop-shadow-md'
-                                                }`}
+                                            }`}
                                         >
                                             Salvar
                                         </span>

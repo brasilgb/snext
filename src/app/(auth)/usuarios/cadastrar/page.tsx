@@ -24,11 +24,6 @@ interface FormProps {
     status: string;
 }
 
-// interface ViaCepProps {
-//   localidade: string;
-//   uf: string;
-// }
-
 const UsuarioCadastrar = () => {
     const {user} = useAuthContext();
     const [message, setMessage] = useState<string>('');
@@ -187,10 +182,9 @@ const UsuarioCadastrar = () => {
                                             <div className="w-full relative mb-4 md:mb-6">
                                                 <Field
                                                     className="w-full shadow bg-gray-50 border-2 border-white rounded-md focus:ring-0 focus:border-blue-200 px-4 py-2.5 text-base text-gray-500 font-medium"
-                                                    type="text"
+                                                    type="password"
                                                     name="password"
                                                     id="password"
-                                                    maxLength={9}
                                                     onChange={handleChange}
                                                     onBlur={handleBlur}
                                                     value={values.password}
@@ -215,10 +209,9 @@ const UsuarioCadastrar = () => {
                                             <div className="w-full relative mb-4 md:mb-6">
                                                 <Field
                                                     className="w-full shadow bg-gray-50 border-2 border-white rounded-md focus:ring-0 focus:border-blue-200 px-4 py-2.5 text-base text-gray-500 font-medium"
-                                                    type="text"
+                                                    type="password"
                                                     name="passwordConfirmation"
                                                     id="passwordConfirmation"
-                                                    maxLength={9}
                                                     onChange={handleChange}
                                                     onBlur={handleBlur}
                                                     value={

@@ -73,10 +73,7 @@ const OrdCadastrar = () => {
                 },
             );
             const {message, status, data, token} = response.data;
-            if (!token) {
-                logout(user.token);
-                return;
-            }
+
             if (status === 200) {
                 setLoading(false);
                 setOrdensAll(data);
@@ -102,15 +99,14 @@ const OrdCadastrar = () => {
                     },
                 })
                 .then(response => {
-                    const { data, token } = response.data;
-                    if (!token) {
-                        logout(user.token);
-                        return;
-                    }
+                    const {data} = response.data;
                     setOrdensAll(data.pop());
                 })
                 .catch(err => {
-                    console.log(err);
+                    const {status} = err.response;
+                    if (status === 401) {
+                        logout(user?.token);
+                    }
                 });
         };
         getOrdensAll();
@@ -125,15 +121,14 @@ const OrdCadastrar = () => {
                     },
                 })
                 .then(response => {
-                    const { data, token } = response.data;
-                    if (!token) {
-                        logout(user.token);
-                        return;
-                    }
+                    const {data} = response.data;
                     setClientesAll(data);
                 })
                 .catch(err => {
-                    console.log(err);
+                    const {status} = err.response;
+                    if (status === 401) {
+                        logout(user?.token);
+                    }
                 });
         };
         getClientesAll();

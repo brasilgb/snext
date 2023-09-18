@@ -8,15 +8,15 @@ import {
     useEffect,
     useState,
 } from 'react';
-import {useRouter} from 'next/navigation';
+import { useRouter } from 'next/navigation';
 const AuthContext = createContext({} as any);
 
 interface AuthContextProps {
     children: ReactNode;
 }
 
-export const AuthProvider = ({children}: AuthContextProps) => {
-    const {push} = useRouter();
+export const AuthProvider = ({ children }: AuthContextProps) => {
+    const { push } = useRouter();
     const [loginMessage, setLoginMessage] = useState<any>('');
     const [loading, setLoading] = useState(false);
     const [user, setUser] = useState<any>(null);
@@ -34,7 +34,7 @@ export const AuthProvider = ({children}: AuthContextProps) => {
     }, []);
 
     const login = useCallback(
-        async ({email, password}: any) => {
+        async ({ email, password }: any) => {
             setLoading(true);
             await sosapi
                 .post('login', {
@@ -42,7 +42,7 @@ export const AuthProvider = ({children}: AuthContextProps) => {
                     password: password,
                 })
                 .then(response => {
-                    const {message, status, data} = response.data;
+                    const { message, status, data } = response.data;
                     if (status === 200) {
                         setLoginMessage('Aguarde redirecionando...');
                         let userData = {
@@ -59,7 +59,7 @@ export const AuthProvider = ({children}: AuthContextProps) => {
                     }
                 })
                 .catch(err => {
-                    const {message, status} = err.response.data;
+                    const { message, status } = err.response.data;
                     setLoginMessage(message);
                 })
                 .finally(() => setLoading(false));
@@ -68,8 +68,8 @@ export const AuthProvider = ({children}: AuthContextProps) => {
     );
 
     const logout = useCallback(
-        
         async (token: string) => {
+            console.log(token)
             await sosapi
                 .post('logout', {
                     headers: {
@@ -77,12 +77,15 @@ export const AuthProvider = ({children}: AuthContextProps) => {
                     },
                 })
                 .then((response) => {
-                    localStorage.removeItem('Auth_user');
-                    setUser(null);
-                    push('/login');
+                    console.log(response.data);
                 })
-                .catch(err => {
-                    console.log(err);
+                .catch((err) => {
+                    const { status } = err.response;
+                    if (status === 401) {
+                        localStorage.removeItem('Auth_user');
+                        setUser(null);
+                        push('/login');
+                    }
                 });
         },
         [push],

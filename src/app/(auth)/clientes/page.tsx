@@ -45,17 +45,16 @@ const Clientes = () => {
                     },
                 })
                 .then(response => {
-                    const { data, token } = response.data;
-                    if (!token) {
-                        logout(user?.token);
-                        return;
-                    }
+                    const {data} = response.data;
                     setClientes(data);
-                    let mdata = data.meta;
+                    let mdata = data?.meta;
                     setMetaData(mdata);
                 })
                 .catch(err => {
-                    console.log(err);
+                    const {status} = err.response;
+                    if (status === 401) {
+                        logout(user?.token);
+                    }
                 });
         };
         getClientes();
@@ -93,7 +92,10 @@ const Clientes = () => {
                     setClientesAll(response.data.data);
                 })
                 .catch(err => {
-                    // logout(user?.token);
+                    const {status} = err.response;
+                    if (status === 401) {
+                        logout(user?.token);
+                    }
                 });
         };
         getClientesAll();
@@ -252,44 +254,46 @@ const Clientes = () => {
                             <></>
                         </ATh>
                     </ATr>
-                    {clientes.map((cliente: any, icl: number) => (
-                        <ATr
-                            key={icl}
-                            line={icl % 2}
-                            lineDeleted={
-                                deleteEffect === cliente.id ? true : false
-                            }
-                        >
-                            <ATd>{cliente.nome}</ATd>
-                            <ATd>{cliente.telefone}</ATd>
-                            <ATd>{cliente.email}</ATd>
-                            <ATd>{formatCpfCnpj(cliente.cpf)}</ATd>
-                            <ATd>
-                                {moment(cliente?.cadastro).format('DD/MM/YYYY')}
-                            </ATd>
-                            <ATd>
-                                <div className="flex items-center justify-end gap-x-2">
-                                    <AButtomEdit
-                                        label=""
-                                        url="/clientes/editar"
-                                        param={cliente.id}
-                                    />
-                                    <AButtomDelete
-                                        deletemodal={() => {
-                                            setDeleteModal(true);
-                                            setIdDelete(cliente.id);
-                                        }}
-                                    />
-                                </div>
-                            </ATd>
-                        </ATr>
-                    ))}
+                    {clientes && clientes.map((cliente: any, icl: number) => (
+                            <ATr
+                                key={icl}
+                                line={icl % 2}
+                                lineDeleted={
+                                    deleteEffect === cliente.id ? true : false
+                                }
+                            >
+                                <ATd>{cliente.nome}</ATd>
+                                <ATd>{cliente.telefone}</ATd>
+                                <ATd>{cliente.email}</ATd>
+                                <ATd>{formatCpfCnpj(cliente.cpf)}</ATd>
+                                <ATd>
+                                    {moment(cliente?.cadastro).format(
+                                        'DD/MM/YYYY',
+                                    )}
+                                </ATd>
+                                <ATd>
+                                    <div className="flex items-center justify-end gap-x-2">
+                                        <AButtomEdit
+                                            label=""
+                                            url="/clientes/editar"
+                                            param={cliente.id}
+                                        />
+                                        <AButtomDelete
+                                            deletemodal={() => {
+                                                setDeleteModal(true);
+                                                setIdDelete(cliente.id);
+                                            }}
+                                        />
+                                    </div>
+                                </ATd>
+                            </ATr>
+                        ))}
                 </ATable>
             </ABoxContent>
 
             <ABoxFooter>
-                {/* <div>{metaData.links.length - 3} ---- {metaData.per_page}</div> */}
-                {metaData.links &&
+                {metaData &&
+                    metaData.links &&
                     metaData.links.length - 3 === metaData.per_page && (
                         <div className="flex items-center justify-center gap-x-2">
                             {metaData.links && (

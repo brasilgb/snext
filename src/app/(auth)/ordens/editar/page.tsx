@@ -17,7 +17,7 @@ import {CgSpinnerTwo} from 'react-icons/cg';
 import moment from 'moment';
 import {editOrdem} from '../schema';
 import {useAuthContext} from '@/contexts/auth';
-import { useSearchParams } from 'next/navigation';
+import {useSearchParams} from 'next/navigation';
 
 interface FormProps {
     numordem: string;
@@ -53,6 +53,7 @@ const OrdEditar = () => {
     const [nomeCliente, setNomeCliente] = useState<boolean>(false);
     const searchParams = useSearchParams();
     const params = searchParams.get('q');
+
     useEffect(() => {
         const getOrdens = async () => {
             await sosapi
@@ -62,16 +63,15 @@ const OrdEditar = () => {
                     },
                 })
                 .then(response => {
-                    const { data, token } = response.data;
-                    if (!token) {
-                        logout(user.token);
-                        return;
-                    }
+                    const {data} = response.data;
                     setOrdens(data);
                     setNomeCliente(data.cliente.nome);
                 })
                 .catch(err => {
-                    // logout(user.token);
+                    const {status} = err.response;
+                    if (status === 401) {
+                        logout(user?.token);
+                    }
                 });
         };
         getOrdens();
@@ -86,17 +86,16 @@ const OrdEditar = () => {
                     },
                 })
                 .then(response => {
-                    const { data, token } = response.data;
-                    if (!token) {
-                        logout(user.token);
-                        return;
-                    }
+                    const {data} = response.data;
                     setTecnicos(
                         data.filter((tecnico: any) => tecnico.function === 3),
                     );
                 })
                 .catch(err => {
-                    // logout(user.token);
+                    const {status} = err.response;
+                    if (status === 401) {
+                        logout(user?.token);
+                    }
                 });
         };
         getTecnicos();
@@ -144,10 +143,7 @@ const OrdEditar = () => {
                 },
             );
             const {message, status, data, token} = response.data;
-                    if (!token) {
-                        logout(user.token);
-                        return;
-                    }
+
             if (status === 200) {
                 setLoading(false);
                 setOrdens(data);
@@ -437,7 +433,8 @@ const OrdEditar = () => {
                                                     htmlFor="defeito"
                                                     className="pl-1 text-sm text-gray-600 font-semibold drop-shadow"
                                                 >
-                                                    Defeito relatado/Serviço solicitado
+                                                    Defeito relatado/Serviço
+                                                    solicitado
                                                 </label>
                                                 <div className="w-full relative">
                                                     <Field

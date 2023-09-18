@@ -1,20 +1,20 @@
 'use client';
-import React, { useState, useCallback, useEffect } from 'react';
+import React, {useState, useCallback, useEffect} from 'react';
 import {
     ABoxAll,
     ABoxContent,
     ABoxFooter,
     ABoxHeader,
 } from '@/components/auth/box';
-import { AButtomBack } from '@/components/auth/buttons';
-import { Field, Form, Formik } from 'formik';
-import { IoSave } from 'react-icons/io5';
-import { cadastrar } from '../schema';
+import {AButtomBack} from '@/components/auth/buttons';
+import {Field, Form, Formik} from 'formik';
+import {IoSave} from 'react-icons/io5';
+import {cadastrar} from '../schema';
 import sosapi from '@/services/sosapi';
 import AMessage from '@/components/auth/message';
-import { CgSpinnerTwo } from 'react-icons/cg';
+import {CgSpinnerTwo} from 'react-icons/cg';
 import Select from 'react-select';
-import { useAuthContext } from '@/contexts/auth';
+import {useAuthContext} from '@/contexts/auth';
 interface FormProps {
     cliente: string;
     data: string;
@@ -27,14 +27,14 @@ interface FormProps {
 }
 
 const AgendaCadastrar = () => {
-    const { user, logout } = useAuthContext();
+    const {user, logout} = useAuthContext();
     const [message, setMessage] = useState<string>('');
     const [showMessage, setShowMessage] = useState<boolean>(false);
     const [loading, setLoading] = useState<boolean>(false);
     const [clientesAll, setClientesAll] = useState<any>([]);
 
     const handleSubmitForm = useCallback(
-        async (values: FormProps, { resetForm }: any) => {
+        async (values: FormProps, {resetForm}: any) => {
             setLoading(true);
             const response = await sosapi.post(
                 `agendas`,
@@ -53,11 +53,8 @@ const AgendaCadastrar = () => {
                     },
                 },
             );
-            const { message, status, token } = response.data;
-            if (!token) {
-                logout(user.token);
-                return;
-            }
+            const {message, status} = response.data;
+
             if (status === 200) {
                 setTimeout(() => {
                     setLoading(false);
@@ -84,19 +81,23 @@ const AgendaCadastrar = () => {
                     },
                 })
                 .then(response => {
-                    setClientesAll(response.data.data);
+                    const {data} = response.data;
+                    setClientesAll(data);
                 })
                 .catch(err => {
-                    console.log(err.response.status);
+                    const {status} = err.response;
+                    if (status === 401) {
+                        logout(user?.token);
+                    }
                 });
         };
         getClientesAll();
     }, [user]);
 
     const statusVisita = [
-        { value: 1, label: 'Aberta' },
-        { value: 2, label: 'Em atendimento' },
-        { value: 3, label: 'Fechada' },
+        {value: 1, label: 'Aberta'},
+        {value: 2, label: 'Em atendimento'},
+        {value: 3, label: 'Fechada'},
     ];
 
     const tecnicos = [
@@ -465,10 +466,11 @@ const AgendaCadastrar = () => {
                             <ABoxFooter>
                                 <div className="flex justify-end">
                                     <button
-                                        className={`shadow rounded-md px-4 py-2 border-2 border-white flex items-center justify-center transition-all duration-500 ${!isValid
+                                        className={`shadow rounded-md px-4 py-2 border-2 border-white flex items-center justify-center transition-all duration-500 ${
+                                            !isValid
                                                 ? ''
                                                 : 'bg-primary-blue hover:bg-secundary-blue'
-                                            }`}
+                                        }`}
                                         type="submit"
                                         disabled={!isValid}
                                     >
@@ -478,10 +480,11 @@ const AgendaCadastrar = () => {
                                             <IoSave className="text-white text-lg mr-2" />
                                         )}
                                         <span
-                                            className={`text-base ${!isValid
+                                            className={`text-base ${
+                                                !isValid
                                                     ? 'text-gray-300'
                                                     : 'text-white drop-shadow-md'
-                                                }`}
+                                            }`}
                                         >
                                             Salvar
                                         </span>

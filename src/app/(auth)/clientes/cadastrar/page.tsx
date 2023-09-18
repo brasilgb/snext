@@ -122,10 +122,7 @@ const CliCadastrar = () => {
                 },
             );
             const {message, status, token} = response.data;
-            if (!token) {
-                logout(user.token);
-                return;
-            }
+
             if (status === 200) {
                 setTimeout(() => {
                     setLoading(false);

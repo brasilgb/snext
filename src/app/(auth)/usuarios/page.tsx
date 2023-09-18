@@ -11,18 +11,18 @@ import {
     AButtomEdit,
 } from '@/components/auth/buttons';
 import AMessage from '@/components/auth/message';
-import {ATable, ATd, ATh, ATr} from '@/components/auth/table';
-import {useAuthContext} from '@/contexts/auth';
+import { ATable, ATd, ATh, ATr } from '@/components/auth/table';
+import { useAuthContext } from '@/contexts/auth';
 import sosapi from '@/services/sosapi';
 import moment from 'moment';
-import React, {useCallback, useEffect, useState} from 'react';
-import {HiOutlineInformationCircle} from 'react-icons/hi2';
-import {IoClose, IoSearch} from 'react-icons/io5';
-import {RiArrowLeftFill, RiArrowRightFill} from 'react-icons/ri';
+import React, { useCallback, useEffect, useState } from 'react';
+import { HiOutlineInformationCircle } from 'react-icons/hi2';
+import { IoClose, IoSearch } from 'react-icons/io5';
+import { RiArrowLeftFill, RiArrowRightFill } from 'react-icons/ri';
 type Props = {};
 
 const Users = (props: Props) => {
-    const {user, logout} = useAuthContext();
+    const { user, logout } = useAuthContext();
     const [deleteModal, setDeleteModal] = useState(false);
     const [users, setUsers] = useState<any>([]);
     const [usersAll, setUsersAll] = useState<any>([]);
@@ -45,12 +45,15 @@ const Users = (props: Props) => {
                     },
                 })
                 .then(response => {
-                    setUsers(response.data.data);
-                    let mdata = response.data.meta;
-                    setMetaData(mdata);
+                    const { data, meta } = response.data;
+                    setUsers(data);
+                    setMetaData(meta);
                 })
                 .catch(err => {
-                    // logout(user.token);
+                    const { status } = err.response;
+                    if (status === 401) {
+                        logout(user?.token);
+                    }
                 });
         };
         getUsers();
@@ -68,9 +71,9 @@ const Users = (props: Props) => {
                 },
             })
             .then(response => {
-                setUsers(response.data.data);
-                let mdata = response.data.meta;
-                setMetaData(mdata);
+                const { data, meta } = response.data;
+                setUsers(data);
+                setMetaData(meta);
             });
         setSearchInput('');
         setShow(false);
@@ -85,10 +88,14 @@ const Users = (props: Props) => {
                     },
                 })
                 .then(response => {
-                    setUsersAll(response.data.data);
+                    const {data} = response.data;
+                    setUsersAll(data);
                 })
                 .catch(err => {
-                    // logout(user.token);
+                    const { status } = err.response;
+                    if (status === 401) {
+                        logout(user?.token);
+                    }
                 });
         };
         getUsersAll();
@@ -123,7 +130,7 @@ const Users = (props: Props) => {
                     Authorization: `Bearer ${user.token}`,
                 },
             });
-            const {message, status} = response.data;
+            const { message, status } = response.data;
             setDeleteEffect(deleteId);
 
             if (status === 200) {
@@ -133,7 +140,8 @@ const Users = (props: Props) => {
                             Authorization: `Bearer ${user.token}`,
                         },
                     });
-                    setUsers(res.data.data);
+                    const { data } = response.data;
+                    setUsers(data);
                 }, 2000);
             }
             setMessage(message);
@@ -181,11 +189,10 @@ const Users = (props: Props) => {
                     <form onSubmit={onsubmit} className="">
                         <div className="relative">
                             <div
-                                className={`flex items-center justify-start w-2/4 bg-gray-50 pr-2 ${
-                                    show
-                                        ? 'rounded-t-md border-2'
-                                        : 'rounded-lg border-2'
-                                } border-white shadow-md`}
+                                className={`flex items-center justify-start w-2/4 bg-gray-50 pr-2 ${show
+                                    ? 'rounded-t-md border-2'
+                                    : 'rounded-lg border-2'
+                                    } border-white shadow-md`}
                             >
                                 <input
                                     className="px-2 py-1 w-full text-base bg-gray-50 border-0 focus:outline-none focus:ring-0 text-gray-500"
@@ -207,11 +214,10 @@ const Users = (props: Props) => {
                                 </div>
                             </div>
                             <div
-                                className={`absolute ${
-                                    show
-                                        ? 'max-h-60 rounded-b-lg overflow-auto'
-                                        : 'max-h-0 invisible'
-                                } transition-all duration-200 ease-in-out w-2/4  top-12 bg-gray-50 border-2 border-white shadow-md p-2`}
+                                className={`absolute ${show
+                                    ? 'max-h-60 rounded-b-lg overflow-auto'
+                                    : 'max-h-0 invisible'
+                                    } transition-all duration-200 ease-in-out w-2/4  top-12 bg-gray-50 border-2 border-white shadow-md p-2`}
                             >
                                 <ul className={`mb-2 ${!show && 'invisible'}`}>
                                     <li>
@@ -267,7 +273,7 @@ const Users = (props: Props) => {
                             <></>
                         </ATh>
                     </ATr>
-                    {users.map((user: any, icl: number) => (
+                    {users && users.map((user: any, icl: number) => (
                         <ATr
                             key={icl}
                             line={icl % 2}
@@ -316,7 +322,7 @@ const Users = (props: Props) => {
                                     title="Página anterior"
                                     disabled={
                                         parseInt(metaData.current_page) - 1 ===
-                                        0
+                                            0
                                             ? true
                                             : false
                                     }
@@ -325,12 +331,11 @@ const Users = (props: Props) => {
                                             parseInt(metaData.current_page) - 1,
                                         )
                                     }
-                                    className={`w-10 h-10 flex items-center justify-center ${
-                                        parseInt(metaData.current_page) - 1 ===
+                                    className={`w-10 h-10 flex items-center justify-center ${parseInt(metaData.current_page) - 1 ===
                                         0
-                                            ? 'text-gray-200'
-                                            : 'bg-gray-50 text-terciary-blue'
-                                    } rounded-md border-2 border-white shadow`}
+                                        ? 'text-gray-200'
+                                        : 'bg-gray-50 text-terciary-blue'
+                                        } rounded-md border-2 border-white shadow`}
                                 >
                                     <RiArrowLeftFill className="text-lg" />
                                 </button>
@@ -351,11 +356,10 @@ const Users = (props: Props) => {
                                                     parseInt(link.label),
                                                 )
                                             }
-                                            className={`w-10 h-10 flex items-center justify-center ${
-                                                link.active
-                                                    ? 'bg-terciary-blue text-white'
-                                                    : 'bg-gray-100 text-terciary-blue'
-                                            } rounded-md border-2 border-white shadow`}
+                                            className={`w-10 h-10 flex items-center justify-center ${link.active
+                                                ? 'bg-terciary-blue text-white'
+                                                : 'bg-gray-100 text-terciary-blue'
+                                                } rounded-md border-2 border-white shadow`}
                                         >
                                             <span
                                                 className={` text-sm font-medium`}
@@ -370,7 +374,7 @@ const Users = (props: Props) => {
                                     title="Próxima página"
                                     disabled={
                                         parseInt(metaData.current_page) ===
-                                        parseInt(metaData.last_page)
+                                            parseInt(metaData.last_page)
                                             ? true
                                             : false
                                     }
@@ -379,12 +383,11 @@ const Users = (props: Props) => {
                                             parseInt(metaData.current_page) + 1,
                                         )
                                     }
-                                    className={`w-10 h-10 flex items-center justify-center ${
-                                        parseInt(metaData.current_page) ===
+                                    className={`w-10 h-10 flex items-center justify-center ${parseInt(metaData.current_page) ===
                                         parseInt(metaData.last_page)
-                                            ? 'text-gray-200'
-                                            : 'bg-gray-50 text-terciary-blue'
-                                    } rounded border-2 border-white shadow`}
+                                        ? 'text-gray-200'
+                                        : 'bg-gray-50 text-terciary-blue'
+                                        } rounded border-2 border-white shadow`}
                                 >
                                     <RiArrowRightFill className="text-lg" />
                                 </button>

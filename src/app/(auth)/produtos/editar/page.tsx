@@ -14,7 +14,7 @@ import sosapi from '@/services/sosapi';
 import AMessage from '@/components/auth/message';
 import {CgSpinnerTwo} from 'react-icons/cg';
 import {useAuthContext} from '@/contexts/auth';
-import { useSearchParams } from 'next/navigation';
+import {useSearchParams} from 'next/navigation';
 
 interface FormProps {
     descricao: string;
@@ -35,6 +35,7 @@ const ProdEditar = () => {
     const [produtos, setProdutos] = useState<any>([]);
     const searchParams = useSearchParams();
     const params = searchParams.get('q');
+
     useEffect(() => {
         const getOrdens = async () => {
             await sosapi
@@ -48,7 +49,10 @@ const ProdEditar = () => {
                     setProdutos(data);
                 })
                 .catch(err => {
-                    // logout(user.token);
+                    const {status} = err.response;
+                    if (status === 401) {
+                        logout(user?.token);
+                    }
                 });
         };
         getOrdens();

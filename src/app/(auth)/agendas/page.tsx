@@ -11,18 +11,18 @@ import {
     AButtomEdit,
 } from '@/components/auth/buttons';
 import AMessage from '@/components/auth/message';
-import { ATable, ATd, ATh, ATr } from '@/components/auth/table';
-import { useAuthContext } from '@/contexts/auth';
+import {ATable, ATd, ATh, ATr} from '@/components/auth/table';
+import {useAuthContext} from '@/contexts/auth';
 import sosapi from '@/services/sosapi';
 import moment from 'moment';
-import React, { useCallback, useEffect, useState } from 'react';
-import { HiOutlineInformationCircle } from 'react-icons/hi2';
-import { IoClose, IoSearch } from 'react-icons/io5';
-import { RiArrowLeftFill, RiArrowRightFill } from 'react-icons/ri';
+import React, {useCallback, useEffect, useState} from 'react';
+import {HiOutlineInformationCircle} from 'react-icons/hi2';
+import {IoClose, IoSearch} from 'react-icons/io5';
+import {RiArrowLeftFill, RiArrowRightFill} from 'react-icons/ri';
 type Props = {};
 
 const Agendas = (props: Props) => {
-    const { user, logout } = useAuthContext();
+    const {user, logout} = useAuthContext();
     const [deleteModal, setDeleteModal] = useState(false);
     const [agendas, setAgendas] = useState<any>([]);
     const [agendasAll, setAgendasAll] = useState<any>([]);
@@ -44,20 +44,15 @@ const Agendas = (props: Props) => {
                     },
                 })
                 .then(response => {
-                    const { data, token } = response.data;
-                    if (!token) {
-                        logout(user.token);
-                        return;
-                    }
+                    const {data, meta} = response.data;
                     setAgendas(data);
-                    let mdata = data.meta;
-                    setMetaData(mdata);
-
-
+                    setMetaData(meta);
                 })
                 .catch(err => {
-                    console.log(err);
-                    // logout(user.token);
+                    const {status} = err.response;
+                    if (status === 401) {
+                        logout(user?.token);
+                    }
                 });
         };
         getAgendas();
@@ -75,9 +70,9 @@ const Agendas = (props: Props) => {
                 },
             })
             .then(response => {
-                setAgendas(response.data.data);
-                let mdata = response.data.meta;
-                setMetaData(mdata);
+                const {data, meta} = response.data;
+                setAgendas(data);
+                setMetaData(meta);
             })
             .catch(err => {
                 // logout(user.token);
@@ -107,7 +102,7 @@ const Agendas = (props: Props) => {
                     Authorization: `Bearer ${user.token}`,
                 },
             });
-            const { message, status } = response.data;
+            const {message, status} = response.data;
             setDeleteEffect(deleteId);
 
             if (status === 200) {
@@ -117,7 +112,9 @@ const Agendas = (props: Props) => {
                             Authorization: `Bearer ${user.token}`,
                         },
                     });
-                    setAgendas(res.data.data);
+                    const {data, meta} = response.data;
+                    setAgendas(data);
+                    setMetaData(meta);
                 }, 2000);
             }
             setMessage(message);
@@ -229,12 +226,13 @@ const Agendas = (props: Props) => {
                             <ATd>{tecnico(agenda.tecnico)}</ATd>
                             <ATd>
                                 <span
-                                    className={`${agenda.status === 1
-                                        ? 'text-primary-red'
-                                        : agenda.status === 2
+                                    className={`${
+                                        agenda.status === 1
+                                            ? 'text-primary-red'
+                                            : agenda.status === 2
                                             ? 'text-primary-yellow'
                                             : 'text-primary-green'
-                                        }`}
+                                    }`}
                                 >
                                     {statusVisita(agenda.status)}
                                 </span>
@@ -272,7 +270,7 @@ const Agendas = (props: Props) => {
                                     title="Página anterior"
                                     disabled={
                                         parseInt(metaData.current_page) - 1 ===
-                                            0
+                                        0
                                             ? true
                                             : false
                                     }
@@ -281,11 +279,12 @@ const Agendas = (props: Props) => {
                                             parseInt(metaData.current_page) - 1,
                                         )
                                     }
-                                    className={`w-10 h-10 flex items-center justify-center ${parseInt(metaData.current_page) - 1 ===
+                                    className={`w-10 h-10 flex items-center justify-center ${
+                                        parseInt(metaData.current_page) - 1 ===
                                         0
-                                        ? 'text-gray-200'
-                                        : 'bg-gray-50 text-terciary-blue'
-                                        } rounded-md border-2 border-white shadow`}
+                                            ? 'text-gray-200'
+                                            : 'bg-gray-50 text-terciary-blue'
+                                    } rounded-md border-2 border-white shadow`}
                                 >
                                     <RiArrowLeftFill className="text-lg" />
                                 </button>
@@ -306,10 +305,11 @@ const Agendas = (props: Props) => {
                                                     parseInt(link.label),
                                                 )
                                             }
-                                            className={`w-10 h-10 flex items-center justify-center ${link.active
-                                                ? 'bg-terciary-blue text-white'
-                                                : 'bg-gray-100 text-terciary-blue'
-                                                } rounded-md border-2 border-white shadow`}
+                                            className={`w-10 h-10 flex items-center justify-center ${
+                                                link.active
+                                                    ? 'bg-terciary-blue text-white'
+                                                    : 'bg-gray-100 text-terciary-blue'
+                                            } rounded-md border-2 border-white shadow`}
                                         >
                                             <span
                                                 className={` text-sm font-medium`}
@@ -324,7 +324,7 @@ const Agendas = (props: Props) => {
                                     title="Próxima página"
                                     disabled={
                                         parseInt(metaData.current_page) ===
-                                            parseInt(metaData.last_page)
+                                        parseInt(metaData.last_page)
                                             ? true
                                             : false
                                     }
@@ -333,11 +333,12 @@ const Agendas = (props: Props) => {
                                             parseInt(metaData.current_page) + 1,
                                         )
                                     }
-                                    className={`w-10 h-10 flex items-center justify-center ${parseInt(metaData.current_page) ===
+                                    className={`w-10 h-10 flex items-center justify-center ${
+                                        parseInt(metaData.current_page) ===
                                         parseInt(metaData.last_page)
-                                        ? 'text-gray-200'
-                                        : 'bg-gray-50 text-terciary-blue'
-                                        } rounded border-2 border-white shadow`}
+                                            ? 'text-gray-200'
+                                            : 'bg-gray-50 text-terciary-blue'
+                                    } rounded border-2 border-white shadow`}
                                 >
                                     <RiArrowRightFill className="text-lg" />
                                 </button>

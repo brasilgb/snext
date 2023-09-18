@@ -12,19 +12,25 @@ import {
     AButtomImage,
 } from '@/components/auth/buttons';
 import AMessage from '@/components/auth/message';
-import { ATable, ATd, ATh, ATr } from '@/components/auth/table';
+import {ATable, ATd, ATh, ATr} from '@/components/auth/table';
 import PrintRecibo from '@/components/printrecibo';
-import { useAuthContext } from '@/contexts/auth';
+import {useAuthContext} from '@/contexts/auth';
 import sosapi from '@/services/sosapi';
 import moment from 'moment';
-import React, { forwardRef, useCallback, useEffect, useRef, useState } from 'react';
-import { HiOutlineInformationCircle } from 'react-icons/hi2';
-import { IoPrintSharp, IoSearch } from 'react-icons/io5';
-import { RiArrowLeftFill, RiArrowRightFill } from 'react-icons/ri';
+import React, {
+    forwardRef,
+    useCallback,
+    useEffect,
+    useRef,
+    useState,
+} from 'react';
+import {HiOutlineInformationCircle} from 'react-icons/hi2';
+import {IoPrintSharp, IoSearch} from 'react-icons/io5';
+import {RiArrowLeftFill, RiArrowRightFill} from 'react-icons/ri';
 import ReactToPrint from 'react-to-print';
 
 const ComponentToPrint = forwardRef((props: any, ref: any) => {
-    const { value } = props;
+    const {value} = props;
 
     return (
         <div ref={ref}>
@@ -34,10 +40,10 @@ const ComponentToPrint = forwardRef((props: any, ref: any) => {
 });
 ComponentToPrint.displayName = 'ComponentToPrint';
 
-const ComponentToPrintWrapper = ({ item }: any) => {
+const ComponentToPrintWrapper = ({item}: any) => {
     const componentRef = useRef(null);
     return (
-        <div style={{ display: 'flex' }}>
+        <div style={{display: 'flex'}}>
             <ReactToPrint
                 trigger={() => (
                     <button className="flex items-center justify-center transition-all duration-300 bg-secundary-blue hover:bg-terciary-blue px-4 py-2 drop-shadow-md rounded-lg border-2 border-white">
@@ -56,7 +62,7 @@ const ComponentToPrintWrapper = ({ item }: any) => {
 const Ordens = () => {
     const printRef = useRef<any>();
 
-    const { user, logout } = useAuthContext();
+    const {user, logout} = useAuthContext();
     const [deleteModal, setDeleteModal] = useState(false);
     const [ordens, setOrdens] = useState<any>([]);
     const [clientesAll, setClientesAll] = useState<any>([]);
@@ -79,17 +85,16 @@ const Ordens = () => {
                     },
                 })
                 .then(response => {
-                    const { data, token } = response.data;
-                    if (!token) {
-                        logout(user.token);
-                        return;
-                    }
+                    const {data} = response.data;
                     setOrdens(data);
                     let mdata = data.meta;
                     setMetaData(mdata);
                 })
                 .catch(err => {
-                    logout(user.token);
+                    const {status} = err.response;
+                    if (status === 401) {
+                        logout(user?.token);
+                    }
                 });
         };
         getOrdens();
@@ -107,11 +112,7 @@ const Ordens = () => {
                 },
             })
             .then(response => {
-                const { data, token } = response.data;
-                    if (!token) {
-                        logout(user.token);
-                        return;
-                    }
+                const {data} = response.data;
                 setOrdens(data);
                 let mdata = data.meta;
                 setMetaData(mdata);
@@ -129,10 +130,14 @@ const Ordens = () => {
                     },
                 })
                 .then(response => {
-                    setClientesAll(response.data.data);
+                    const {data} = response.data;
+                    setClientesAll(data);
                 })
                 .catch(err => {
-                    // logout(user.token);
+                    const {status} = err.response;
+                    if (status === 401) {
+                        logout(user?.token);
+                    }
                 });
         };
         getClientesAll();
@@ -159,7 +164,7 @@ const Ordens = () => {
                     Authorization: `Bearer ${user.token}`,
                 },
             });
-            const { message, status } = response.data;
+            const {message, status} = response.data;
             setDeleteEffect(deleteId);
 
             if (status === 200) {
@@ -169,7 +174,8 @@ const Ordens = () => {
                             Authorization: `Bearer ${user.token}`,
                         },
                     });
-                    setOrdens(res.data.data);
+                    const {data} = res.data;
+                    setOrdens(data);
                 }, 2000);
             }
             setMessage(message);
@@ -261,7 +267,7 @@ const Ordens = () => {
                             <></>
                         </ATh>
                     </ATr>
-                    {ordens.map((ordem: any, icl: number) => (
+                    {ordens && ordens.map((ordem: any, icl: number) => (
                         <ATr
                             key={icl}
                             line={icl % 2}
@@ -273,19 +279,19 @@ const Ordens = () => {
                             <ATd>{ordem.cliente.nome}</ATd>
                             <ATd>{ordem.cliente.telefone}</ATd>
                             <ATd>
-                                {moment(ordem.dtentrada).format(
-                                    'DD/MM/YYYY')}
+                                {moment(ordem.dtentrada).format('DD/MM/YYYY')}
                             </ATd>
                             <ATd>{ordem.equipamento}</ATd>
                             <ATd>
                                 <span
-                                    className={`${ordem.status === 1
+                                    className={`${
+                                        ordem.status === 1
                                             ? 'text-primary-red'
                                             : ordem.status === 3 ||
-                                                ordem.status === 7
-                                                ? 'text-primary-green'
-                                                : 'text-primary-yellow'
-                                        }`}
+                                              ordem.status === 7
+                                            ? 'text-primary-green'
+                                            : 'text-primary-yellow'
+                                    }`}
                                 >
                                     {setcomunicado(ordem.status)}
                                 </span>
@@ -293,8 +299,8 @@ const Ordens = () => {
                             <ATd>
                                 {ordem.status === 7
                                     ? moment(ordem.dtentrega).format(
-                                        'DD/MM/YYYY DD:mm:ss',
-                                    )
+                                          'DD/MM/YYYY DD:mm:ss',
+                                      )
                                     : '__/__/____'}
                             </ATd>
                             <ATd>
@@ -329,7 +335,7 @@ const Ordens = () => {
             </ABoxContent>
 
             <ABoxFooter>
-                {metaData.links &&
+                {metaData && metaData.links &&
                     metaData.links.length - 3 === metaData.per_page && (
                         <div className="flex items-center justify-center gap-x-2">
                             {metaData.links && (
@@ -337,7 +343,7 @@ const Ordens = () => {
                                     title="Página anterior"
                                     disabled={
                                         parseInt(metaData.current_page) - 1 ===
-                                            0
+                                        0
                                             ? true
                                             : false
                                     }
@@ -346,11 +352,12 @@ const Ordens = () => {
                                             parseInt(metaData.current_page) - 1,
                                         )
                                     }
-                                    className={`w-10 h-10 flex items-center justify-center ${parseInt(metaData.current_page) - 1 ===
-                                            0
+                                    className={`w-10 h-10 flex items-center justify-center ${
+                                        parseInt(metaData.current_page) - 1 ===
+                                        0
                                             ? 'text-gray-200'
                                             : 'bg-gray-50 text-terciary-blue'
-                                        } rounded-md border-2 border-white shadow`}
+                                    } rounded-md border-2 border-white shadow`}
                                 >
                                     <RiArrowLeftFill className="text-lg" />
                                 </button>
@@ -371,10 +378,11 @@ const Ordens = () => {
                                                     parseInt(link.label),
                                                 )
                                             }
-                                            className={`w-10 h-10 flex items-center justify-center ${link.active
+                                            className={`w-10 h-10 flex items-center justify-center ${
+                                                link.active
                                                     ? 'bg-terciary-blue text-white'
                                                     : 'bg-gray-100 text-terciary-blue'
-                                                } rounded-md border-2 border-white shadow`}
+                                            } rounded-md border-2 border-white shadow`}
                                         >
                                             <span
                                                 className={` text-sm font-medium`}
@@ -389,7 +397,7 @@ const Ordens = () => {
                                     title="Próxima página"
                                     disabled={
                                         parseInt(metaData.current_page) ===
-                                            parseInt(metaData.last_page)
+                                        parseInt(metaData.last_page)
                                             ? true
                                             : false
                                     }
@@ -398,11 +406,12 @@ const Ordens = () => {
                                             parseInt(metaData.current_page) + 1,
                                         )
                                     }
-                                    className={`w-10 h-10 flex items-center justify-center ${parseInt(metaData.current_page) ===
-                                            parseInt(metaData.last_page)
+                                    className={`w-10 h-10 flex items-center justify-center ${
+                                        parseInt(metaData.current_page) ===
+                                        parseInt(metaData.last_page)
                                             ? 'text-gray-200'
                                             : 'bg-gray-50 text-terciary-blue'
-                                        } rounded border-2 border-white shadow`}
+                                    } rounded border-2 border-white shadow`}
                                 >
                                     <RiArrowRightFill className="text-lg" />
                                 </button>

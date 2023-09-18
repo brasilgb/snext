@@ -13,14 +13,9 @@ import {
 import {CgSpinnerTwo} from 'react-icons/cg';
 import Boxorder from '@/components/auth/boxorder';
 
-type Props = {};
-
-const Dashboard = (props: Props) => {
+const Dashboard = () => {
     const {user, logout} = useAuthContext();
     const userToken = user?.token;
-
-
-
     const [clientes, setClientes] = useState<any>([]);
     const [ordens, setOrdens] = useState<any>([]);
     const [produtos, setProdutos] = useState<any>([]);
@@ -43,16 +38,13 @@ const Dashboard = (props: Props) => {
                     },
                 })
                 .then(response => {
-                    const{ token, data } = response.data
+                    const {data} = response.data;
                     setClientes(data);
-                    if(!token) {
-                        console.log(token);
-                    }
                 })
                 .catch(err => {
-                    if (userToken) {
-                        
-                        logout(userToken);
+                    const {status} = err.response;
+                    if (status === 401) {
+                        logout(user?.token);
                     }
                 })
                 .finally(() => setLoading1(false));
@@ -70,10 +62,14 @@ const Dashboard = (props: Props) => {
                     },
                 })
                 .then(response => {
-                    setOrdens(response.data.data);
+                    const {data} = response.data;
+                    setOrdens(data);
                 })
                 .catch(err => {
-                    // console.log('');
+                    const {status} = err.response;
+                    if (status === 401) {
+                        logout(user?.token);
+                    }
                 })
                 .finally(() => setLoading2(false));
         };
@@ -90,10 +86,14 @@ const Dashboard = (props: Props) => {
                     },
                 })
                 .then(response => {
-                    setProdutos(response.data.data);
+                    const {data} = response.data;
+                    setProdutos(data);
                 })
                 .catch(err => {
-                    // console.log('');
+                    const {status} = err.response;
+                    if (status === 401) {
+                        logout(user?.token);
+                    }
                 })
                 .finally(() => setLoading3(false));
         };
@@ -110,10 +110,14 @@ const Dashboard = (props: Props) => {
                     },
                 })
                 .then(response => {
-                    setMensagens(response.data.data);
+                    const {data} = response.data;
+                    setMensagens(data);
                 })
                 .catch(err => {
-                    // console.log('');
+                    const {status} = err.response;
+                    if (status === 401) {
+                        logout(user?.token);
+                    }
                 })
                 .finally(() => setLoading4(false));
         };
@@ -130,10 +134,14 @@ const Dashboard = (props: Props) => {
                     },
                 })
                 .then(response => {
-                    setAgendas(response.data.data);
+                    const {data} = response.data;
+                    setAgendas(data);
                 })
                 .catch(err => {
-                    // console.log('');
+                    const {status} = err.response;
+                    if (status === 401) {
+                        logout(user?.token);
+                    }
                 })
                 .finally(() => setLoading5(false));
         };
@@ -145,7 +153,7 @@ const Dashboard = (props: Props) => {
             <div className="md:grid grid-cols-5 gap-4 p-4">
                 <AKpi
                     label="Clientes"
-                    value={clientes?.length}
+                    value={clientes.length}
                     bgcolor="from-secundary-blue to-terciary-blue"
                     icon={props =>
                         loading1 ? (
@@ -163,7 +171,7 @@ const Dashboard = (props: Props) => {
 
                 <AKpi
                     label="Ordens"
-                    value={ordens?.length}
+                    value={ordens.length}
                     bgcolor="from-primary-yellow to-secundary-yellow"
                     icon={props =>
                         loading2 ? (
@@ -181,7 +189,7 @@ const Dashboard = (props: Props) => {
 
                 <AKpi
                     label="Produtos"
-                    value={produtos?.length}
+                    value={produtos.length}
                     bgcolor="from-primary-green to-secundary-green"
                     icon={props =>
                         loading3 ? (
@@ -203,7 +211,7 @@ const Dashboard = (props: Props) => {
 
                 <AKpi
                     label="Agendamentos"
-                    value={agendas?.length}
+                    value={agendas.length}
                     bgcolor="from-primary-red to-secundary-red"
                     icon={props =>
                         loading4 ? (
@@ -225,7 +233,7 @@ const Dashboard = (props: Props) => {
 
                 <AKpi
                     label="Mensagens"
-                    value={mensagens?.length}
+                    value={mensagens.length}
                     bgcolor="from-purple-700 to-purple-500"
                     icon={props =>
                         loading5 ? (
@@ -244,21 +252,21 @@ const Dashboard = (props: Props) => {
 
             <div className="md:grid grid-cols-3 gap-2 mx-4">
                 <Boxorder
-                    ordens={ordens || []}
+                    ordens={ordens}
                     query={(fo: any) => fo.orcamento == 1}
                     title="Orçamentos gerados"
                     iconColor="#EF476F"
                     titleColor="text-secundary-red"
                 />
                 <Boxorder
-                    ordens={ordens || []}
+                    ordens={ordens}
                     query={(fo: any) => fo.orcamento == 2}
                     title="Orçamentos aprovados"
                     iconColor="#03B00A"
                     titleColor="text-primary-green"
                 />
                 <Boxorder
-                    ordens={ordens || []}
+                    ordens={ordens}
                     query={(fo: any) => fo.status == 5 || fo.status == 6}
                     title="Serviços concluídos"
                     iconColor="#01497C"

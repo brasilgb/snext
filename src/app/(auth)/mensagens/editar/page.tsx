@@ -14,7 +14,7 @@ import sosapi from '@/services/sosapi';
 import AMessage from '@/components/auth/message';
 import {CgSpinnerTwo} from 'react-icons/cg';
 import {useAuthContext} from '@/contexts/auth';
-import { useSearchParams } from 'next/navigation';
+import {useSearchParams} from 'next/navigation';
 interface FormProps {
     remetente: string;
     destinatario: string;
@@ -38,15 +38,14 @@ const MensagemEditar = () => {
                     },
                 })
                 .then(response => {
-                    const { data, token } = response.data;
-                    if (!token) {
-                        logout(user.token);
-                        return;
-                    }
+                    const {data} = response.data;
                     setMensagens(data);
                 })
                 .catch(err => {
-                    // logout(user.token);
+                    const {status} = err.response;
+                    if (status === 401) {
+                        logout(user?.token);
+                    }
                 });
         };
         getMensagens();
@@ -69,10 +68,7 @@ const MensagemEditar = () => {
                 },
             );
             const {message, status, token} = response.data;
-            if (!token) {
-                logout(user.token);
-                return;
-            }
+
             if (status === 200) {
                 setTimeout(() => {
                     setLoading(false);
