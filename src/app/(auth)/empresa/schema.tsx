@@ -11,6 +11,7 @@ const validateCpfCnpj = async (num: string) => {
 };
 
 export default Yup.object().shape({
+    empresa: Yup.string().required('Informe o nome fantasia (curto)'),
     razao: Yup.string().required('Informe a razão social'),
     cnpj: Yup.string()
         .required()

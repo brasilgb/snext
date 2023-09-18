@@ -20,6 +20,7 @@ import Image from 'next/image';
 
 interface FormProps {
     id: string;
+    empresa: string;
     razao: string;
     cnpj: string;
     logo: any;
@@ -122,6 +123,7 @@ const Empresa = () => {
         async (values: FormProps) => {
             setLoading(true);
             const FilesData = new FormData();
+            FilesData.append('empresa', values.empresa);
             FilesData.append('razao', values.razao);
             FilesData.append('cnpj', values.cnpj);
             FilesData.append('logo', values.logo);
@@ -171,6 +173,7 @@ const Empresa = () => {
                 enableReinitialize
                 initialValues={{
                     id: empresas.id,
+                    empresa: empresas.empresa,
                     razao: empresas.razao,
                     cnpj: empresas.cnpj,
                     logo: null,
@@ -219,7 +222,7 @@ const Empresa = () => {
 
                             <ABoxContent>
                                 <div className="mt-4 px-2">
-                                    <div className="md:grid md:grid-cols-4 md:gap-x-6">
+                                    <div className="md:grid md:grid-cols-5 md:gap-x-6">
                                         <div className="">
                                             <label
                                                 htmlFor="logo"
@@ -263,6 +266,33 @@ const Empresa = () => {
                                                     )}
                                                 </div>
                                             </label>
+                                        </div>
+
+                                        <div className="">
+                                            <label
+                                                htmlFor="empresa"
+                                                className="pl-1 text-sm text-gray-600 font-semibold drop-shadow"
+                                            >
+                                                Nome curto (fantasia)
+                                            </label>
+                                            <div className="w-full relative mb-4 md:mb-6">
+                                                <Field
+                                                    className="w-full shadow bg-gray-50 border-2 border-white rounded-md focus:ring-0 focus:border-blue-200 px-4 py-2.5 text-base text-gray-500 font-medium"
+                                                    type="text"
+                                                    name="empresa"
+                                                    id="empresa"
+                                                    onChange={handleChange}
+                                                    onBlur={handleBlur}
+                                                    value={values.empresa}
+                                                    title="Nome curto da empresa"
+                                                />
+                                                {errors.empresa &&
+                                                    touched.empresa && (
+                                                        <div className="text-sm text-secundary-red pl-1 pt-1">
+                                                            {errors.empresa}
+                                                        </div>
+                                                    )}
+                                            </div>
                                         </div>
 
                                         <div className="md:col-span-2">
