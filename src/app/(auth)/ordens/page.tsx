@@ -85,10 +85,9 @@ const Ordens = () => {
                     },
                 })
                 .then(response => {
-                    const {data} = response.data;
+                    const {data, meta} = response.data;
                     setOrdens(data);
-                    let mdata = data.meta;
-                    setMetaData(mdata);
+                    setMetaData(meta);
                 })
                 .catch(err => {
                     const {status} = err.response;
@@ -112,10 +111,9 @@ const Ordens = () => {
                 },
             })
             .then(response => {
-                const {data} = response.data;
+                const {data, meta} = response.data;
                 setOrdens(data);
-                let mdata = data.meta;
-                setMetaData(mdata);
+                setMetaData(meta);
             });
         setSearchInput('');
         setShow(false);

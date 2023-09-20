@@ -45,10 +45,9 @@ const Clientes = () => {
                     },
                 })
                 .then(response => {
-                    const {data} = response.data;
+                    const {data, meta} = response.data;
                     setClientes(data);
-                    let mdata = data?.meta;
-                    setMetaData(mdata);
+                    setMetaData(meta);
                 })
                 .catch(err => {
                     const {status} = err.response;

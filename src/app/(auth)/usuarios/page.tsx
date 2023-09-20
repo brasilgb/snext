@@ -170,7 +170,7 @@ const Users = (props: Props) => {
         let funcao;
         switch (value) {
             case 1:
-                funcao = 'Supervisor';
+                funcao = 'Administrador';
                 break;
             case 2:
                 funcao = 'Usuário';

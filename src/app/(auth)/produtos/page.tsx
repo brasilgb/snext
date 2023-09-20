@@ -71,9 +71,9 @@ const Produtos = (props: Props) => {
                 },
             })
             .then(response => {
-                setProdutos(response.data.data);
-                let mdata = response.data.meta;
-                setMetaData(mdata);
+                const { data, meta } = response.data;
+                setProdutos(data);
+                setMetaData(meta);
             });
         setSearchInput('');
         setShow(false);

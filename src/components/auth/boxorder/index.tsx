@@ -36,7 +36,7 @@ const Boxorder = ({ordens, query, title, iconColor, titleColor}: BoxProps) => {
                 </div>
                 <div className="h-60 overflow-auto">
                     {ordens.filter(query).map((ordem: any, idx: any) => (
-                        <Link key={idx} href={`/ordens/editar/${ordem.id}`}>
+                        <Link key={idx} href={`/ordens/editar?q=${ordem.id}`}>
                             <div
                                 key={idx}
                                 className="flex items-center justify-start border-b border-b-gray-200 py-1"
