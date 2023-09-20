@@ -1,15 +1,16 @@
 'use client';
+<<<<<<< HEAD
 import {useAuthContext} from '@/contexts/auth';
+=======
+import { useAuthContext } from '@/contexts/auth';
+>>>>>>> b3e7eb95694cd54baac45ea5020092af2f9f9fae
 import Link from 'next/link';
-import React, {useEffect, useState} from 'react';
-import {IoChevronDown, IoLogOut, IoPerson} from 'react-icons/io5';
+import React, { useState } from 'react';
+import { IoChevronDown, IoLogOut, IoPerson } from 'react-icons/io5';
 
-type Props = {};
-
-const Header = (props: Props) => {
+const Header = () => {
     const [navDropdown, setNavDropdown] = useState(false);
-    const {user, logout} = useAuthContext();
-
+    const { user, logout } = useAuthContext();
     const handleLogout = () => {
         setNavDropdown(false);
         logout(user.token);
@@ -19,9 +20,8 @@ const Header = (props: Props) => {
         <>
             <div
                 onClick={() => setNavDropdown(false)}
-                className={`${
-                    navDropdown ? '' : 'hidden'
-                } fixed top-0 right-0 bottom-0 left-0 bg-transparent z-0`}
+                className={`${navDropdown ? '' : 'hidden'
+                    } fixed top-0 right-0 bottom-0 left-0 bg-transparent z-0`}
             />
             <div className="bg-gray-50 py-3 px-4 flex items-center justify-between shadow">
                 <div></div>
@@ -33,19 +33,17 @@ const Header = (props: Props) => {
                         >
                             <IoPerson className="text-xl text-gray-50" />
                             <IoChevronDown
-                                className={`${
-                                    navDropdown ? '-rotate-180' : 'rotate-0'
-                                } transition-all duration-500 text-xl text-gray-50 ml-2 cursor-pointer`}
+                                className={`${navDropdown ? '-rotate-180' : 'rotate-0'
+                                    } transition-all duration-500 text-xl text-gray-50 ml-2 cursor-pointer`}
                             />
                         </button>
                         <ul
-                            className={`${
-                                navDropdown ? 'max-h-44' : 'max-h-0 invisible'
-                            } z-20 absolute transition-all duration-500 ease-in-out overflow-hidden top-12 right-0 w-56 px-2 bg-gray-50 border border-white rounded-md shadow-md`}
+                            className={`${navDropdown ? 'max-h-44' : 'max-h-0 invisible'
+                                } z-20 absolute transition-all duration-500 ease-in-out overflow-hidden top-12 right-0 w-56 px-2 bg-gray-50 border border-white rounded-md shadow-md`}
                         >
                             <li className="py-2">
                                 <Link
-                                    href={'#'}
+                                    href={`usuarios/editar?q=${user && user.id}`}
                                     onClick={() => setNavDropdown(false)}
                                     className="flex items-center justify-start"
                                 >
