@@ -1,9 +1,5 @@
 'use client';
-<<<<<<< HEAD
 import {useAuthContext} from '@/contexts/auth';
-=======
-import { useAuthContext } from '@/contexts/auth';
->>>>>>> b3e7eb95694cd54baac45ea5020092af2f9f9fae
 import Link from 'next/link';
 import React, { useState } from 'react';
 import { IoChevronDown, IoLogOut, IoPerson } from 'react-icons/io5';
