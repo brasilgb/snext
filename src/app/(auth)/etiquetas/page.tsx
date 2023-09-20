@@ -111,7 +111,7 @@ const Recibo = () => {
                 });
         };
         getEmpresas();
-    }, [user]);
+    }, [user, logout]);
 
     useEffect(() => {
         const getOrdens = async () => {
@@ -133,7 +133,7 @@ const Recibo = () => {
                 });
         };
         getOrdens();
-    }, [user]);
+    }, [user,logout]);
 
     // onsubmit
     const onsubmit = (values: any) => {

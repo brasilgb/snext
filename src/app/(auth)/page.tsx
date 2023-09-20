@@ -3,7 +3,7 @@ import AKpi from '@/components/auth/kpi';
 import {useAuthContext} from '@/contexts/auth';
 import sosapi from '@/services/sosapi';
 import React, {useEffect, useState} from 'react';
-import {FaArrowCircleDown, FaArrowCircleRight, FaTools} from 'react-icons/fa';
+import {FaTools} from 'react-icons/fa';
 import {
     FaBasketShopping,
     FaCalendarDays,
@@ -15,7 +15,6 @@ import Boxorder from '@/components/auth/boxorder';
 
 const Dashboard = () => {
     const {user, logout} = useAuthContext();
-    const userToken = user?.token;
     const [clientes, setClientes] = useState<any>([]);
     const [ordens, setOrdens] = useState<any>([]);
     const [produtos, setProdutos] = useState<any>([]);
@@ -34,7 +33,7 @@ const Dashboard = () => {
             await sosapi
                 .get(`allclientes`, {
                     headers: {
-                        Authorization: `Bearer ${userToken}`,
+                        Authorization: `Bearer ${user?.token}`,
                     },
                 })
                 .then(response => {
@@ -50,7 +49,7 @@ const Dashboard = () => {
                 .finally(() => setLoading1(false));
         };
         getClientes();
-    }, [userToken, logout]);
+    }, [user, logout]);
 
     useEffect(() => {
         const getOrdens = async () => {
@@ -58,7 +57,7 @@ const Dashboard = () => {
             await sosapi
                 .get(`allordens`, {
                     headers: {
-                        Authorization: `Bearer ${userToken}`,
+                        Authorization: `Bearer ${user?.token}`,
                     },
                 })
                 .then(response => {
@@ -74,7 +73,7 @@ const Dashboard = () => {
                 .finally(() => setLoading2(false));
         };
         getOrdens();
-    }, [userToken]);
+    }, [user,logout]);
 
     useEffect(() => {
         const getProdutos = async () => {
@@ -82,7 +81,7 @@ const Dashboard = () => {
             await sosapi
                 .get(`allprodutos`, {
                     headers: {
-                        Authorization: `Bearer ${userToken}`,
+                        Authorization: `Bearer ${user?.token}`,
                     },
                 })
                 .then(response => {
@@ -98,7 +97,7 @@ const Dashboard = () => {
                 .finally(() => setLoading3(false));
         };
         getProdutos();
-    }, [userToken]);
+    }, [user,logout]);
 
     useEffect(() => {
         const getMensagens = async () => {
@@ -106,7 +105,7 @@ const Dashboard = () => {
             await sosapi
                 .get(`allmensagens`, {
                     headers: {
-                        Authorization: `Bearer ${userToken}`,
+                        Authorization: `Bearer ${user?.token}`,
                     },
                 })
                 .then(response => {
@@ -122,7 +121,7 @@ const Dashboard = () => {
                 .finally(() => setLoading4(false));
         };
         getMensagens();
-    }, [userToken]);
+    }, [user,logout]);
 
     useEffect(() => {
         const getAgendas = async () => {
@@ -130,7 +129,7 @@ const Dashboard = () => {
             await sosapi
                 .get(`allagendas`, {
                     headers: {
-                        Authorization: `Bearer ${userToken}`,
+                        Authorization: `Bearer ${user?.token}`,
                     },
                 })
                 .then(response => {
@@ -146,7 +145,7 @@ const Dashboard = () => {
                 .finally(() => setLoading5(false));
         };
         getAgendas();
-    }, [userToken]);
+    }, [user, logout]);
 
     return (
         <>

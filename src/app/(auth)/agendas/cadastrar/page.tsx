@@ -92,7 +92,7 @@ const AgendaCadastrar = () => {
                 });
         };
         getClientesAll();
-    }, [user]);
+    }, [user,logout]);
 
     const statusVisita = [
         {value: 1, label: 'Aberta'},

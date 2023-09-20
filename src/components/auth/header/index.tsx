@@ -1,6 +1,5 @@
 'use client';
 import {useAuthContext} from '@/contexts/auth';
-import {listUserAuthenticated} from '@/function/list-user-autenticated';
 import Link from 'next/link';
 import React, {useEffect, useState} from 'react';
 import {IoChevronDown, IoLogOut, IoPerson} from 'react-icons/io5';

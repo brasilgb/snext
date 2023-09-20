@@ -110,7 +110,7 @@ const OrdCadastrar = () => {
                 });
         };
         getOrdensAll();
-    }, [user]);
+    }, [user,logout]);
 
     useEffect(() => {
         const getClientesAll = async () => {
@@ -132,7 +132,7 @@ const OrdCadastrar = () => {
                 });
         };
         getClientesAll();
-    }, [user]);
+    }, [user,logout]);
 
     const options = clientesAll.map((cliente: any) => ({
         value: cliente.id,

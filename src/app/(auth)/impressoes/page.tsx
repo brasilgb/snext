@@ -47,7 +47,7 @@ const Impressoes = () => {
                 });
         };
         getImpressoes();
-    }, [user]);
+    }, [user,logout]);
 
     const handleSubmitForm = useCallback(
         async (values: FormProps) => {
