@@ -20,14 +20,12 @@ export const AuthProvider = ({ children }: AuthContextProps) => {
     const [loginMessage, setLoginMessage] = useState<any>('');
     const [loading, setLoading] = useState(false);
     const [user, setUser] = useState<any>(null);
-    const [tokenUser, setTokenUser] = useState<any>(null);
 
     useEffect(() => {
         const loadStorage = async () => {
             const recoveredUser = localStorage.getItem('Auth_user');
             if (recoveredUser) {
                 setUser(JSON.parse(recoveredUser));
-                setTokenUser(JSON.parse(recoveredUser)[0]);
             }
         };
         loadStorage();
@@ -42,10 +40,11 @@ export const AuthProvider = ({ children }: AuthContextProps) => {
                     password: password,
                 })
                 .then(response => {
-                    const { message, status, data } = response.data;
+                    const { status, data } = response.data;
                     if (status === 200) {
                         setLoginMessage('Aguarde redirecionando...');
                         let userData = {
+                            id: data.id,
                             name: data.name,
                             email: data.email,
                             token: data.token,
@@ -59,7 +58,7 @@ export const AuthProvider = ({ children }: AuthContextProps) => {
                     }
                 })
                 .catch(err => {
-                    const { message, status } = err.response.data;
+                    const { message } = err.response.data;
                     setLoginMessage(message);
                 })
                 .finally(() => setLoading(false));
@@ -69,7 +68,6 @@ export const AuthProvider = ({ children }: AuthContextProps) => {
 
     const logout = useCallback(
         async (token: string) => {
-            console.log(token)
             await sosapi
                 .post('logout', {
                     headers: {
@@ -77,7 +75,7 @@ export const AuthProvider = ({ children }: AuthContextProps) => {
                     },
                 })
                 .then((response) => {
-                    console.log(response.data);
+                    setLoginMessage('');
                 })
                 .catch((err) => {
                     const { status } = err.response;
@@ -86,7 +84,7 @@ export const AuthProvider = ({ children }: AuthContextProps) => {
                         setUser(null);
                         push('/login');
                     }
-                });
+                }).finally(() =>  setLoginMessage(''));
         },
         [push],
     );

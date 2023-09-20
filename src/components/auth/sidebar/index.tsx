@@ -63,8 +63,8 @@ const Sidebar = ({setOpen, open}: SideProps) => {
                     } duration-300 absolute cursor-pointer bg-white border-4 border-primary-blue text-primary-blue rounded-full text-3xl -right-3 top-3`}
                 />
             </div>
-            <div className="inline-flex items-center justify-start">
-                <span className="bg-amber-300 text-xl rounded cursor-pointer block float-left mr-2">
+            <div className="inline-flex items-center">
+                <span className={`w-10 h-10 rounded-full cursor-pointer float-left mr-2 duration-500 ${open && 'rotate-[360deg]'}`}>
                     <Image
                         src={
                             empresas.logo
@@ -72,9 +72,9 @@ const Sidebar = ({setOpen, open}: SideProps) => {
                                 : `${process.env.NEXT_PUBLIC_SITE_URL}/storage/image/notimage.jpg`
                         }
                         alt="logo"
-                        className="h-11"
-                        width={44}
-                        height={10}
+                        className="h-10"
+                        width={40}
+                        height={40}
                     />
                 </span>
                 <h1
@@ -90,7 +90,7 @@ const Sidebar = ({setOpen, open}: SideProps) => {
                     <li className="mt-2">
                         <Link
                             onClick={() => setNavDropdown(false)}
-                            className={`flex items-center justify-start gap-x-4 hover:bg-white hover:text-secundary-blue transition-all duration-300 ${
+                            className={`flex items-center justify-center gap-x-4 hover:bg-white hover:text-secundary-blue transition-all duration-300 ${
                                 pathname === '/'
                                     ? 'bg-white text-secundary-blue'
                                     : 'text-white'
@@ -113,7 +113,7 @@ const Sidebar = ({setOpen, open}: SideProps) => {
                     <li className="mt-2">
                         <Link
                             onClick={() => setNavDropdown(false)}
-                            className={`flex items-center justify-start gap-x-4 hover:bg-white hover:text-secundary-blue transition-all duration-300 ${
+                            className={`flex items-center justify-center gap-x-4 hover:bg-white hover:text-secundary-blue transition-all duration-300 ${
                                 pathname === '/clientes' ||
                                 pathname === '/clientes/cadastrar' ||
                                 pathname ===
@@ -139,7 +139,7 @@ const Sidebar = ({setOpen, open}: SideProps) => {
                     <li className="mt-2">
                         <Link
                             onClick={() => setNavDropdown(false)}
-                            className={`flex items-center justify-start gap-x-4 hover:bg-white hover:text-secundary-blue transition-all duration-300 ${
+                            className={`flex items-center justify-center gap-x-4 hover:bg-white hover:text-secundary-blue transition-all duration-300 ${
                                 pathname === '/ordens' ||
                                 pathname === '/ordens/cadastrar' ||
                                 pathname ===
@@ -169,7 +169,7 @@ const Sidebar = ({setOpen, open}: SideProps) => {
                     <li className="mt-2">
                         <Link
                             onClick={() => setNavDropdown(false)}
-                            className={`flex items-center justify-start gap-x-4 hover:bg-white hover:text-secundary-blue transition-all duration-300 ${
+                            className={`flex items-center justify-center gap-x-4 hover:bg-white hover:text-secundary-blue transition-all duration-300 ${
                                 pathname === '/produtos' ||
                                 pathname === '/produtos/cadastrar' ||
                                 pathname ===
@@ -196,7 +196,7 @@ const Sidebar = ({setOpen, open}: SideProps) => {
                     <li className="mt-2">
                         <Link
                             onClick={() => setNavDropdown(false)}
-                            className={`flex items-center justify-start gap-x-4 hover:bg-white hover:text-secundary-blue transition-all duration-300 ${
+                            className={`flex items-center justify-center gap-x-4 hover:bg-white hover:text-secundary-blue transition-all duration-300 ${
                                 pathname === '/agendas' ||
                                 pathname === '/agendas/cadastrar' ||
                                 pathname ===
@@ -223,7 +223,7 @@ const Sidebar = ({setOpen, open}: SideProps) => {
                     <li className="mt-2">
                         <Link
                             onClick={() => setNavDropdown(false)}
-                            className={`flex items-center justify-start gap-x-4 hover:bg-white hover:text-secundary-blue transition-all duration-300 ${
+                            className={`flex items-center justify-center gap-x-4 hover:bg-white hover:text-secundary-blue transition-all duration-300 ${
                                 pathname === '/mensagens' ||
                                 pathname === '/mensagens/cadastrar' ||
                                 pathname ===
@@ -260,7 +260,7 @@ const Sidebar = ({setOpen, open}: SideProps) => {
                          } p-2 rounded cursor-pointer transition-all duration-500`}
                     >
                         <div className="flex items-center justify-between gap-x-4">
-                            <span className="text-base block float-left">
+                            <span className={`text-base block float-left ${!open && 'ml-1'}`}>
                                 <FaSliders />
                             </span>
                             <span
@@ -286,7 +286,7 @@ const Sidebar = ({setOpen, open}: SideProps) => {
                             <li className="mt-2">
                                 <Link
                                     onClick={() => setNavDropdown(false)}
-                                    className={`flex items-center justify-start gap-x-4 hover:bg-white hover:text-secundary-blue transition-all duration-300 ${
+                                    className={`flex items-center justify-center gap-x-4 hover:bg-white hover:text-secundary-blue transition-all duration-300 ${
                                         open ? 'p-2' : 'px-0 py-2'
                                     } rounded`}
                                     href={'/empresa'}
@@ -307,7 +307,7 @@ const Sidebar = ({setOpen, open}: SideProps) => {
                             <li className="">
                                 <Link
                                     onClick={() => setNavDropdown(false)}
-                                    className={`flex items-center justify-start gap-x-4 hover:bg-white hover:text-secundary-blue transition-all duration-300 ${
+                                    className={`flex items-center justify-center gap-x-4 hover:bg-white hover:text-secundary-blue transition-all duration-300 ${
                                         open ? 'p-2' : 'px-0 py-2'
                                     } rounded`}
                                     href={'/email'}
@@ -329,7 +329,7 @@ const Sidebar = ({setOpen, open}: SideProps) => {
                             <li className="">
                                 <Link
                                     onClick={() => setNavDropdown(false)}
-                                    className={`flex items-center justify-start gap-x-4 hover:bg-white hover:text-secundary-blue transition-all duration-300 ${
+                                    className={`flex items-center justify-center gap-x-4 hover:bg-white hover:text-secundary-blue transition-all duration-300 ${
                                         open ? 'p-2' : 'px-0 py-2'
                                     } rounded`}
                                     href={'/impressoes'}
@@ -351,7 +351,7 @@ const Sidebar = ({setOpen, open}: SideProps) => {
                             <li className="">
                                 <Link
                                     onClick={() => setNavDropdown(false)}
-                                    className={`flex items-center justify-start gap-x-4 hover:bg-white hover:text-secundary-blue transition-all duration-300 ${
+                                    className={`flex items-center justify-center gap-x-4 hover:bg-white hover:text-secundary-blue transition-all duration-300 ${
                                         open ? 'p-2' : 'px-0 py-2'
                                     } rounded`}
                                     href={'/etiquetas'}
@@ -374,7 +374,7 @@ const Sidebar = ({setOpen, open}: SideProps) => {
                     <li className="mt-2">
                         <Link
                             onClick={() => setNavDropdown(false)}
-                            className={`flex items-center justify-start gap-x-4 hover:bg-white hover:text-secundary-blue transition-all duration-300 ${
+                            className={`flex items-center justify-center gap-x-4 hover:bg-white hover:text-secundary-blue transition-all duration-300 ${
                                 pathname === '/usuarios' ||
                                 pathname === '/usuarios/cadastrar' ||
                                 pathname ===
@@ -400,7 +400,7 @@ const Sidebar = ({setOpen, open}: SideProps) => {
                     {/* <li className="mt-2">
                         <Link
                             onClick={() => setNavDropdown(false)}
-                            className={`flex items-center justify-start gap-x-4 hover:bg-white hover:text-secundary-blue transition-all duration-300 ${
+                            className={`flex items-center justify-center gap-x-4 hover:bg-white hover:text-secundary-blue transition-all duration-300 ${
                                 pathname === '/relatorios'
                                     ? 'bg-white text-secundary-blue'
                                     : 'text-white'
