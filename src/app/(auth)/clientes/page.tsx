@@ -39,7 +39,7 @@ const Clientes = () => {
     const [message, setMessage] = useState<string>('');
     const [showMessage, setShowMessage] = useState<boolean>(false);
     const [deleteEffect, setDeleteEffect] = useState(null);
-    const [openCustomer, setOpenCustomer] = useState(null);
+    const [openCustomer, setOpenCustomer] = useState(0);
     // const [orderCustomer, setOrderCustomer] = useState<any>([]);
 
     useEffect(() => {
@@ -307,7 +307,6 @@ const Clientes = () => {
                             {cliente.ordens.map((ordem:any, idx:number) => (
                                 <ATr><ATd>{ ordem.id }</ATd><ATd>{ ordem.id }</ATd><ATd>{ ordem.id }</ATd></ATr>
                             ))
-                               
                             }
                         </>
                     ))}
