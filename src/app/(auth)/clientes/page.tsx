@@ -9,20 +9,24 @@ import {
     AButtomAdd,
     AButtomDelete,
     AButtomEdit,
+    AButtomOrder,
 } from '@/components/auth/buttons';
 import AMessage from '@/components/auth/message';
-import {ATable, ATd, ATh, ATr} from '@/components/auth/table';
-import {useAuthContext} from '@/contexts/auth';
+import { ATable, ATd, ATh, ATr } from '@/components/auth/table';
+import { useAuthContext } from '@/contexts/auth';
 import sosapi from '@/services/sosapi';
-import {cpf, cnpj} from 'cpf-cnpj-validator';
+import { cpf, cnpj } from 'cpf-cnpj-validator';
 import moment from 'moment';
-import React, {useCallback, useEffect, useState} from 'react';
-import {HiOutlineInformationCircle} from 'react-icons/hi2';
-import {IoClose, IoSearch} from 'react-icons/io5';
-import {RiArrowLeftFill, RiArrowRightFill} from 'react-icons/ri';
+import { useRouter } from 'next/navigation';
+import React, { useCallback, useEffect, useState } from 'react';
+import { FaTools } from 'react-icons/fa';
+import { HiOutlineInformationCircle } from 'react-icons/hi2';
+import { IoClose, IoSearch } from 'react-icons/io5';
+import { RiArrowLeftFill, RiArrowRightFill } from 'react-icons/ri';
 
 const Clientes = () => {
-    const {user, logout} = useAuthContext();
+    const { push } = useRouter();
+    const { user, logout } = useAuthContext();
     const [deleteModal, setDeleteModal] = useState(false);
     const [clientes, setClientes] = useState<any>([]);
     const [clientesAll, setClientesAll] = useState<any>([]);
@@ -45,12 +49,12 @@ const Clientes = () => {
                     },
                 })
                 .then(response => {
-                    const {data, meta} = response.data;
+                    const { data, meta } = response.data;
                     setClientes(data);
                     setMetaData(meta);
                 })
                 .catch(err => {
-                    const {status} = err.response;
+                    const { status } = err.response;
                     if (status === 401) {
                         logout(user?.token);
                     }
@@ -91,7 +95,7 @@ const Clientes = () => {
                     setClientesAll(response.data.data);
                 })
                 .catch(err => {
-                    const {status} = err.response;
+                    const { status } = err.response;
                     if (status === 401) {
                         logout(user?.token);
                     }
@@ -129,7 +133,7 @@ const Clientes = () => {
                     Authorization: `Bearer ${user?.token}`,
                 },
             });
-            const {message, status} = response.data;
+            const { message, status } = response.data;
             setDeleteEffect(deleteId);
 
             if (status === 200) {
@@ -159,7 +163,9 @@ const Clientes = () => {
             return cnpj.format(num);
         }
     };
-
+    const orderCustomer = (id: number) => {
+        console.log(id);
+    }
     return (
         <ABoxAll>
             <ABoxHeader>
@@ -167,11 +173,10 @@ const Clientes = () => {
                     <form onSubmit={onsubmit} className="">
                         <div className="relative">
                             <div
-                                className={`flex items-center justify-start w-2/4 bg-gray-50 pr-2 ${
-                                    show
-                                        ? 'rounded-t-md border-2'
-                                        : 'rounded-lg border-2'
-                                } border-white shadow-md`}
+                                className={`flex items-center justify-start w-2/4 bg-gray-50 pr-2 ${show
+                                    ? 'rounded-t-md border-2'
+                                    : 'rounded-lg border-2'
+                                    } border-white shadow-md`}
                             >
                                 <input
                                     className="px-2 py-1 w-full text-base bg-gray-50 border-0 focus:outline-none focus:ring-0 text-gray-500"
@@ -193,11 +198,10 @@ const Clientes = () => {
                                 </div>
                             </div>
                             <div
-                                className={`absolute ${
-                                    show
-                                        ? 'max-h-60 rounded-b-lg overflow-auto'
-                                        : 'max-h-0 invisible'
-                                } transition-all duration-200 ease-in-out w-2/4  top-12 bg-gray-50 border-2 border-white shadow-md p-2`}
+                                className={`absolute ${show
+                                    ? 'max-h-60 rounded-b-lg overflow-auto'
+                                    : 'max-h-0 invisible'
+                                    } transition-all duration-200 ease-in-out w-2/4  top-12 bg-gray-50 border-2 border-white shadow-md p-2`}
                             >
                                 <ul className={`mb-2 ${!show && 'invisible'}`}>
                                     <li>
@@ -254,39 +258,47 @@ const Clientes = () => {
                         </ATh>
                     </ATr>
                     {clientes && clientes.map((cliente: any, icl: number) => (
-                            <ATr
-                                key={icl}
-                                line={icl % 2}
-                                lineDeleted={
-                                    deleteEffect === cliente.id ? true : false
-                                }
-                            >
-                                <ATd>{cliente.nome}</ATd>
-                                <ATd>{cliente.telefone}</ATd>
-                                <ATd>{cliente.email}</ATd>
-                                <ATd>{formatCpfCnpj(cliente.cpf)}</ATd>
-                                <ATd>
-                                    {moment(cliente?.cadastro).format(
-                                        'DD/MM/YYYY',
-                                    )}
-                                </ATd>
-                                <ATd>
-                                    <div className="flex items-center justify-end gap-x-2">
-                                        <AButtomEdit
-                                            label=""
-                                            url="/clientes/editar"
-                                            param={cliente.id}
-                                        />
-                                        <AButtomDelete
-                                            deletemodal={() => {
-                                                setDeleteModal(true);
-                                                setIdDelete(cliente.id);
-                                            }}
-                                        />
-                                    </div>
-                                </ATd>
-                            </ATr>
-                        ))}
+                        <ATr
+                            key={icl}
+                            line={icl % 2}
+                            lineDeleted={
+                                deleteEffect === cliente.id ? true : false
+                            }
+                        >
+                            <ATd>{cliente.nome}</ATd>
+                            <ATd>{cliente.telefone}</ATd>
+                            <ATd>{cliente.email}</ATd>
+                            <ATd>{formatCpfCnpj(cliente.cpf)}</ATd>
+                            <ATd>
+                                {moment(cliente?.cadastro).format(
+                                    'DD/MM/YYYY',
+                                )}
+                            </ATd>
+                            <ATd>
+                                <div className="flex items-center justify-end gap-x-2">
+
+                                    <button
+                                        className="flex items-center justify-center transition-all duration-300 bg-secundary-blue hover:bg-terciary-blue px-4 py-2 drop-shadow-md rounded-lg border-2 border-white"
+                                        onClick={() => orderCustomer(cliente.id)}
+                                    >
+                                        <FaTools className="text-lg text-gray-50" />
+                                    </button>
+
+                                    <AButtomEdit
+                                        label=""
+                                        url="/clientes/editar"
+                                        param={cliente.id}
+                                    />
+                                    <AButtomDelete
+                                        deletemodal={() => {
+                                            setDeleteModal(true);
+                                            setIdDelete(cliente.id);
+                                        }}
+                                    />
+                                </div>
+                            </ATd>
+                        </ATr>
+                    ))}
                 </ATable>
             </ABoxContent>
 
@@ -300,7 +312,7 @@ const Clientes = () => {
                                     title="Página anterior"
                                     disabled={
                                         parseInt(metaData.current_page) - 1 ===
-                                        0
+                                            0
                                             ? true
                                             : false
                                     }
@@ -309,12 +321,11 @@ const Clientes = () => {
                                             parseInt(metaData.current_page) - 1,
                                         )
                                     }
-                                    className={`w-10 h-10 flex items-center justify-center ${
-                                        parseInt(metaData.current_page) - 1 ===
+                                    className={`w-10 h-10 flex items-center justify-center ${parseInt(metaData.current_page) - 1 ===
                                         0
-                                            ? 'text-gray-200'
-                                            : 'bg-gray-50 text-terciary-blue'
-                                    } rounded-md border-2 border-white shadow`}
+                                        ? 'text-gray-200'
+                                        : 'bg-gray-50 text-terciary-blue'
+                                        } rounded-md border-2 border-white shadow`}
                                 >
                                     <RiArrowLeftFill className="text-lg" />
                                 </button>
@@ -335,11 +346,10 @@ const Clientes = () => {
                                                     parseInt(link.label),
                                                 )
                                             }
-                                            className={`w-10 h-10 flex items-center justify-center ${
-                                                link.active
-                                                    ? 'bg-terciary-blue text-white'
-                                                    : 'bg-gray-100 text-terciary-blue'
-                                            } rounded-md border-2 border-white shadow`}
+                                            className={`w-10 h-10 flex items-center justify-center ${link.active
+                                                ? 'bg-terciary-blue text-white'
+                                                : 'bg-gray-100 text-terciary-blue'
+                                                } rounded-md border-2 border-white shadow`}
                                         >
                                             <span
                                                 className={` text-sm font-medium`}
@@ -354,7 +364,7 @@ const Clientes = () => {
                                     title="Próxima página"
                                     disabled={
                                         parseInt(metaData.current_page) ===
-                                        parseInt(metaData.last_page)
+                                            parseInt(metaData.last_page)
                                             ? true
                                             : false
                                     }
@@ -363,12 +373,11 @@ const Clientes = () => {
                                             parseInt(metaData.current_page) + 1,
                                         )
                                     }
-                                    className={`w-10 h-10 flex items-center justify-center ${
-                                        parseInt(metaData.current_page) ===
+                                    className={`w-10 h-10 flex items-center justify-center ${parseInt(metaData.current_page) ===
                                         parseInt(metaData.last_page)
-                                            ? 'text-gray-200'
-                                            : 'bg-gray-50 text-terciary-blue'
-                                    } rounded border-2 border-white shadow`}
+                                        ? 'text-gray-200'
+                                        : 'bg-gray-50 text-terciary-blue'
+                                        } rounded border-2 border-white shadow`}
                                 >
                                     <RiArrowRightFill className="text-lg" />
                                 </button>

@@ -15,6 +15,7 @@ export const addOrdem = Yup.object().shape({
 
 export const editOrdem = Yup.object().shape({
     equipamento: Yup.string().required('Informe o tipo de equipamento'),
+    previsao: Yup.string().required('Previsão de entrega'),
     senha: Yup.string().required('Digite a senha ou 0'),
     defeito: Yup.string().required('Descreva o defeito'),
     estado: Yup.string().required('Descreva o estado de conservação'),

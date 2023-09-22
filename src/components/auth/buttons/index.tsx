@@ -14,6 +14,7 @@ import {HiOutlineInformationCircle, HiTrash} from 'react-icons/hi2';
 import sosapi from '@/services/sosapi';
 import AMessage from '../message';
 import {useRouter} from 'next/navigation';
+import { FaTools } from 'react-icons/fa';
 
 interface ButtonsProps {
     label?: string;
@@ -88,6 +89,19 @@ export const AButtomPrint = ({label, onclick}: ButtonsProps) => {
             <IoPrintSharp className="text-lg text-gray-50" />
             <span className="text-sm text-gray-50 font-medium">{label}</span>
         </button>
+    );
+};
+
+export const AButtomOrder = ({label, url, param}: ButtonsProps) => {
+    return (
+        <Link
+            className="flex items-center justify-center transition-all duration-300 bg-secundary-blue hover:bg-terciary-blue px-4 py-2 drop-shadow-md rounded-lg border-2 border-white"
+            href={{pathname: url, query: {c: param}}}
+            passHref
+        >
+            <FaTools className="text-lg text-gray-50" />
+            <span className="text-sm text-gray-50 font-medium">{label}</span>
+        </Link>
     );
 };
 
