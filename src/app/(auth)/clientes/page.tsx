@@ -39,6 +39,8 @@ const Clientes = () => {
     const [message, setMessage] = useState<string>('');
     const [showMessage, setShowMessage] = useState<boolean>(false);
     const [deleteEffect, setDeleteEffect] = useState(null);
+    const [openCustomer, setOpenCustomer] = useState(null);
+    // const [orderCustomer, setOrderCustomer] = useState<any>([]);
 
     useEffect(() => {
         const getClientes = async () => {
@@ -163,9 +165,12 @@ const Clientes = () => {
             return cnpj.format(num);
         }
     };
-    const orderCustomer = (id: number) => {
+
+    const handleOrderCustomer = (id: number) => {
+        setOpenCustomer(id);
         console.log(id);
     }
+
     return (
         <ABoxAll>
             <ABoxHeader>
@@ -258,46 +263,53 @@ const Clientes = () => {
                         </ATh>
                     </ATr>
                     {clientes && clientes.map((cliente: any, icl: number) => (
-                        <ATr
-                            key={icl}
-                            line={icl % 2}
-                            lineDeleted={
-                                deleteEffect === cliente.id ? true : false
+                        <>
+                            <ATr
+                                key={icl}
+                                line={icl % 2}
+                                lineDeleted={
+                                    deleteEffect === cliente.id ? true : false
+                                }
+                            >
+                                <ATd>{cliente.nome}</ATd>
+                                <ATd>{cliente.telefone}</ATd>
+                                <ATd>{cliente.email}</ATd>
+                                <ATd>{formatCpfCnpj(cliente.cpf)}</ATd>
+                                <ATd>
+                                    {moment(cliente?.cadastro).format(
+                                        'DD/MM/YYYY',
+                                    )}
+                                </ATd>
+                                <ATd>
+                                    <div className="flex items-center justify-end gap-x-2">
+
+                                        <button
+                                            className="flex items-center justify-center transition-all duration-300 bg-secundary-blue hover:bg-terciary-blue px-4 py-2 drop-shadow-md rounded-lg border-2 border-white"
+                                            onClick={() => handleOrderCustomer(cliente.id)}
+                                        >
+                                            <FaTools className="text-lg text-gray-50" />
+                                        </button>
+
+                                        <AButtomEdit
+                                            label=""
+                                            url="/clientes/editar"
+                                            param={cliente.id}
+                                        />
+                                        <AButtomDelete
+                                            deletemodal={() => {
+                                                setDeleteModal(true);
+                                                setIdDelete(cliente.id);
+                                            }}
+                                        />
+                                    </div>
+                                </ATd>
+                            </ATr>
+                            {cliente.ordens.map((ordem:any, idx:number) => (
+                                <ATr><ATd>{ ordem.id }</ATd><ATd>{ ordem.id }</ATd><ATd>{ ordem.id }</ATd></ATr>
+                            ))
+                               
                             }
-                        >
-                            <ATd>{cliente.nome}</ATd>
-                            <ATd>{cliente.telefone}</ATd>
-                            <ATd>{cliente.email}</ATd>
-                            <ATd>{formatCpfCnpj(cliente.cpf)}</ATd>
-                            <ATd>
-                                {moment(cliente?.cadastro).format(
-                                    'DD/MM/YYYY',
-                                )}
-                            </ATd>
-                            <ATd>
-                                <div className="flex items-center justify-end gap-x-2">
-
-                                    <button
-                                        className="flex items-center justify-center transition-all duration-300 bg-secundary-blue hover:bg-terciary-blue px-4 py-2 drop-shadow-md rounded-lg border-2 border-white"
-                                        onClick={() => orderCustomer(cliente.id)}
-                                    >
-                                        <FaTools className="text-lg text-gray-50" />
-                                    </button>
-
-                                    <AButtomEdit
-                                        label=""
-                                        url="/clientes/editar"
-                                        param={cliente.id}
-                                    />
-                                    <AButtomDelete
-                                        deletemodal={() => {
-                                            setDeleteModal(true);
-                                            setIdDelete(cliente.id);
-                                        }}
-                                    />
-                                </div>
-                            </ATd>
-                        </ATr>
+                        </>
                     ))}
                 </ATable>
             </ABoxContent>
