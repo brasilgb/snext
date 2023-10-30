@@ -7,8 +7,7 @@ import {
     ABoxHeader,
 } from '@/components/auth/box';
 import {AButtomBack} from '@/components/auth/buttons';
-import Select from 'react-select';
-import {Field, Form, Formik, useFormikContext} from 'formik';
+import {Field, Form, Formik} from 'formik';
 import {IoSave} from 'react-icons/io5';
 import {CgSpinnerTwo} from 'react-icons/cg';
 import schema from '../schema';
